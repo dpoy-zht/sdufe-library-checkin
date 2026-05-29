@@ -11,35 +11,11 @@
   
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
-    background-color: #F2F2F7;
-    background-image: url('background.png');
-    background-repeat: no-repeat;
-    background-position: center 55%;
-    background-size: 75% auto;
-    background-attachment: fixed;
+    background: #F2F2F7;
     color: #000;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* 背景遮罩层 */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: rgba(242, 242, 247, 0.55);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* 所有内容在遮罩之上 */
-  .content,
-  .loading-overlay,
-  .result-overlay,
-  .toast {
-    position: relative;
-    z-index: 1;
   }
   
   /* 状态栏 */
@@ -142,13 +118,37 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-size: cover;
+    background-position: center;
+  }
+  /* 奶龙背景图 */
+  .action-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('background.png') no-repeat center / cover;
+    opacity: 0.45;
+    z-index: 0;
+  }
+  /* 渐变色叠加层（遮住图片 + 保留按钮色彩） */
+  .action-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .action-card .icon,
+  .action-card .name,
+  .action-card .name-en {
+    position: relative;
+    z-index: 2;
   }
   .action-card:active {
     transform: scale(0.96);
   }
-  .action-card.checkin  { background: linear-gradient(135deg, #007AFF, #5AC8FA); }
-  .action-card.tempout  { background: linear-gradient(135deg, #FF9500, #FFCC00); }
-  .action-card.checkout { background: linear-gradient(135deg, #FF3B30, #FF6B6B); }
+  .action-card.checkin::after  { background: linear-gradient(135deg, rgba(0,122,255,0.72), rgba(90,200,250,0.72)); }
+  .action-card.tempout::after { background: linear-gradient(135deg, rgba(255,149,0,0.72), rgba(255,204,0,0.72)); }
+  .action-card.checkout::after { background: linear-gradient(135deg, rgba(255,59,48,0.72), rgba(255,107,107,0.72)); }
   
   .action-card .icon {
     font-size: 36px;
