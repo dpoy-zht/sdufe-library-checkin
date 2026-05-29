@@ -333,6 +333,16 @@ html, body {
   opacity: 0.5;
   pointer-events: none;
 }
+.status-nailong {
+  position: absolute;
+  right: -8px;
+  bottom: -10px;
+  width: 130px;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}
 .status-label {
   font-size: 13px;
   color: var(--text-sub);
@@ -807,6 +817,7 @@ html, body {
 
     <!-- ===== 🎴 状态信息卡片 ===== -->
     <div class="status-card">
+      <img src="nailong-status.jpg" class="status-nailong" alt="">
       <div class="status-label">📡 当前状态</div>
       <div class="status-value">
         <span class="status-dot offline" id="statusDot"></span>
