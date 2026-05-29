@@ -809,6 +809,100 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .btn-cream-secondary:active { transform: scale(0.96); background: var(--cream-yellow); color: var(--text-main); }
 
 /* ============================================================
+   🏆 成就展示栏
+   ============================================================ */
+.achievement-section {
+  margin-bottom: 20px;
+}
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.ach-cell {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  border: 1px solid rgba(255,255,255,0.5);
+  transition: all 0.25s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.ach-cell:active { transform: scale(0.94); }
+.ach-cell.locked {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.ach-cell.locked .ach-cell-icon {
+  filter: grayscale(1) brightness(0.7);
+}
+.ach-cell.unlocked .ach-cell-icon {
+  animation: achIconFloat 3s ease-in-out infinite;
+}
+@keyframes achIconFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+.ach-cell-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 4px;
+  transition: transform 0.2s;
+}
+.ach-cell-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+.ach-cell.locked .ach-cell-name {
+  color: var(--text-sub);
+}
+.ach-cell-desc {
+  display: none; /* 点击时在 tooltip 中展示 */
+}
+/* 新解锁闪光 */
+.ach-cell.just-unlocked {
+  animation: achUnlock 0.8s ease-out;
+}
+@keyframes achUnlock {
+  0%   { transform: scale(0.5); opacity: 0; box-shadow: 0 0 0 0 rgba(255,179,71,0.6); }
+  50%  { transform: scale(1.15); box-shadow: 0 0 20px 8px rgba(255,179,71,0.3); }
+  100% { transform: scale(1); opacity: 1; box-shadow: var(--shadow-soft); }
+}
+
+/* 成就详情 tooltip */
+.ach-tooltip {
+  position: fixed;
+  bottom: 160px; left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: linear-gradient(135deg, #FFF9E8, #FFE4A0);
+  color: var(--text-main);
+  padding: 14px 22px;
+  border-radius: var(--radius-xl);
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 250;
+  box-shadow: 0 8px 24px rgba(255,179,71,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+.ach-tooltip.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.ach-tooltip-icon { font-size: 22px; }
+.ach-tooltip-name { display: block; font-size: 16px; font-weight: 800; margin: 4px 0 2px; }
+.ach-tooltip-desc { font-size: 12px; color: #8B7355; font-weight: 600; }
+
+/* ============================================================
    🍞 底部版本提示
    ============================================================ */
 .footer {
@@ -1155,6 +1249,12 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
       <div id="historyList" class="timeline"></div>
     </div>
 
+    <!-- ===== 🏆 成就展示栏 ===== -->
+    <div class="achievement-section">
+      <div class="history-title">🏆 成就 · ACHIEVEMENTS</div>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
       <span class="heart">❤</span> SDUFE Library Remote Check-in v2.2<br>
@@ -1188,6 +1288,13 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   <span class="ach-icon" id="achIcon">🏆</span>
   <span id="achTitle"></span>
   <div class="ach-name" id="achName"></div>
+</div>
+
+<!-- ===== 🏆 成就详情 tooltip ===== -->
+<div class="ach-tooltip" id="achTooltip">
+  <span class="ach-tooltip-icon" id="achTipIcon">🌟</span>
+  <span class="ach-tooltip-name" id="achTipName">初来乍到</span>
+  <span class="ach-tooltip-desc" id="achTipDesc">完成第一次签到</span>
 </div>
 
 <!-- ===== 🥚 长按彩蛋 ===== -->
@@ -1579,7 +1686,38 @@ function showAchievement(a) {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3500);
   speakNailong('恭喜解锁成就：' + a.name + '！');
+  // 刷新成就栏并高亮
+  renderAchievementGrid(a.id);
 }
+
+// ===== 渲染成就展示栏 =====
+function renderAchievementGrid(justUnlocked) {
+  const grid = document.getElementById('achGrid');
+  if (!grid) return;
+  const unlocked = JSON.parse(localStorage.getItem('unlockedAch') || '[]');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const isUnlocked = unlocked.includes(a.id);
+    const cell = document.createElement('div');
+    cell.className = 'ach-cell ' + (isUnlocked ? 'unlocked' : 'locked');
+    if (justUnlocked === a.id) cell.classList.add('just-unlocked');
+    cell.innerHTML =
+      '<span class="ach-cell-icon">' + (isUnlocked ? a.icon : '❓') + '</span>' +
+      '<div class="ach-cell-name">' + (isUnlocked ? a.name : '???') + '</div>';
+    // 点击显示详情
+    cell.addEventListener('click', () => {
+      if (!isUnlocked) return;
+      const tip = document.getElementById('achTooltip');
+      document.getElementById('achTipIcon').textContent = a.icon;
+      document.getElementById('achTipName').textContent = a.name;
+      document.getElementById('achTipDesc').textContent = a.desc + ' ✅';
+      tip.classList.add('show');
+      setTimeout(() => tip.classList.remove('show'), 2000);
+    });
+    grid.appendChild(cell);
+  });
+}
+renderAchievementGrid();
 
 // ===== 😤 闲置催促 =====
 let idleTimer = null;
