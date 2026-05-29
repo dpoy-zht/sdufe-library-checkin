@@ -11,22 +11,35 @@
   
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
-    background: #F2F2F7;
+    background-color: #F2F2F7;
+    background-image: url('background.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
     color: #000;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* 背景图 */
-  body::before {
+  /* 背景遮罩层 - 降低背景图亮度确保不遮挡 */
+  body::after {
     content: '';
     position: fixed;
     inset: 0;
-    z-index: -1;
-    background: url('background.png') no-repeat center center / cover;
-    opacity: 0.12;
+    background: rgba(242, 242, 247, 0.88);
+    z-index: 0;
     pointer-events: none;
+  }
+
+  /* 所有内容在遮罩之上 */
+  .content,
+  .loading-overlay,
+  .result-overlay,
+  .toast {
+    position: relative;
+    z-index: 1;
   }
   
   /* 状态栏 */
@@ -62,14 +75,6 @@
   /* 内容区 */
   .content {
     padding: 16px 16px 140px;
-    position: relative;
-  }
-  /* 确保卡片在背景图上有足够对比度 */
-  .status-card,
-  .action-card,
-  .history-item,
-  .result-sheet {
-    position: relative;
   }
   
   /* 状态卡片 - 蓝色渐变 */
