@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🐉 奶龙图书馆签到</title>
+<title>奶龙图书馆签到</title>
 
 <!-- ===== 圆润卡通字体 ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -202,12 +202,22 @@ html, body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .menu-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.9); }
-.nav-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: 0.5px;
-}
+  .nav-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+  }
 .nav-time {
   font-size: 15px;
   font-weight: 700;
@@ -403,7 +413,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 15%; /* 重点显示奶龙脸部 */
+  object-position: center 35%; /* 脸部往下多露一点 */
   opacity: 1; /* ✅ 完全不透明 */
   z-index: 0;
   /* 无滤镜，无遮罩 */
@@ -754,7 +764,7 @@ html, body {
   <nav class="top-nav">
     <div class="nav-left">
       <button class="menu-btn" onclick="toggleMenu()">☰</button>
-      <span class="nav-title">🐉 奶龙签到</span>
+      <span class="nav-title"><img src="nailong-icon.png" class="nav-icon" alt="">奶龙签到</span>
     </div>
     <span class="nav-time" id="navTime">9:41</span>
   </nav>
