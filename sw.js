@@ -1,8 +1,9 @@
-const CACHE_NAME = 'nailong-v2.3';
+const CACHE_NAME = 'nailong-v2.5';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './background.png',
   './nailong-icon.png',
   './nailong1.png',
   './nailong2.png',
@@ -11,7 +12,11 @@ const ASSETS = [
   './nailong5.png',
   './nailong6.png',
   './nailong-happy.png',
-  './nailong-urge.png'
+  './nailong-urge.png',
+  './nailong-sleep.png',
+  './nailong-surprise.png',
+  './nailong-eat.png',
+  './nailong-longleg.jpg'
 ];
 
 self.addEventListener('install', e => {
@@ -28,6 +33,10 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+    fetch(e.request).then(response => {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+      return response;
+    }).catch(() => caches.match(e.request))
   );
 });
