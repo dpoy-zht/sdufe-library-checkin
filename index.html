@@ -1002,6 +1002,9 @@ function doAction(type) {
   const names = { '1': '签到入馆', '2': '临时离馆', '3': '签离出馆' };
   const msgs  = { '1': '签到成功啦~奶龙陪你学习！', '2': '临时离馆~记得早点回来哦！', '3': '签离出馆~奶龙明天见！' };
 
+  // 同步触发语音（必须在用户手势的同步调用栈中，移动端才能播放）
+  speakNailong(msgs[type]);
+
   document.getElementById('loading').classList.add('show');
 
   fetch('https://libst.sdufe.edu.cn/api.php/v3qrtime', { mode: 'cors', cache: 'no-cache' })
@@ -1023,9 +1026,6 @@ function doAction(type) {
       renderCheckInStatus();
 
       addHistory(type, ts);
-
-      // 奶龙语音播报
-      speakNailong(msgs[type]);
 
       document.getElementById('resultIcon').textContent = '✅';
       document.getElementById('resultTitle').textContent = names[type] + ' 就绪';
