@@ -1645,7 +1645,19 @@ function checkClosingReminder() {
 setInterval(checkClosingReminder, 60000);
 setTimeout(checkClosingReminder, 5000);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'activated') {
+          // 自动刷新获取最新版本
+          if (navigator.serviceWorker.controller) {
+            window.location.reload();
+          }
+        }
+      });
+    });
+  }).catch(() => {});
 }
 
 // ===== 🥚 长按奶龙彩蛋 =====
