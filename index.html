@@ -473,9 +473,8 @@
 
 <script>
 // ===== 密码校验 =====
-const SECRET_KEY  = [7,3,9,1,5,8,2,4,6,7];
-const ENCRYPTED   = "816b7d7b6d7c3a3c3e3f";
-const CORRECT_PWD = SECRET_KEY.map(k=>String.fromCharCode(k+60)).join('');
+// 前端密码本就可查看源码，无需混淆，直接明文比对
+const CORRECT_PWD = 'zhtzht8888';
 
 function checkPassword(){
   const input = document.getElementById('pwdInput').value;
