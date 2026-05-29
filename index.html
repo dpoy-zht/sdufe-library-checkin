@@ -1283,12 +1283,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   </div>
 </div>
 
-<!-- ===== 🏆 成就弹窗 ===== -->
-<div class="achievement-toast" id="achToast">
-  <span class="ach-icon" id="achIcon">🏆</span>
-  <span id="achTitle"></span>
-  <div class="ach-name" id="achName"></div>
-</div>
+
 
 <!-- ===== 🏆 成就详情 tooltip ===== -->
 <div class="ach-tooltip" id="achTooltip">
@@ -1679,15 +1674,9 @@ function checkAchievements() {
 }
 
 function showAchievement(a) {
-  document.getElementById('achIcon').textContent = a.icon;
-  document.getElementById('achTitle').textContent = a.name;
-  document.getElementById('achName').textContent = a.desc;
-  const toast = document.getElementById('achToast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
   speakNailong('恭喜解锁成就：' + a.name + '！');
-  // 刷新成就栏并高亮
   renderAchievementGrid(a.id);
+  showToast('🏅 ' + a.name + ' — ' + a.desc);
 }
 
 // ===== 渲染成就展示栏 =====
