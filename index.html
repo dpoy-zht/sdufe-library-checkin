@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#FFE4A0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="奶龙签到">
+<link rel="manifest" href="manifest.json">
 <title>奶龙图书馆签到</title>
 
 <!-- ===== 圆润卡通字体 ===== -->
@@ -34,6 +38,7 @@ n ============================================================ */
   --text-sub: #9A8B7A;          /* 次要文字 */
   --text-light: #FFF;           /* 亮色文字 */
 
+  /* 背景 */
   /* 背景 */
   --bg-page: linear-gradient(180deg, #FFF9E8 0%, #FFF0F5 40%, #E8F5F0 100%);
   --bg-card: rgba(255, 255, 255, 0.72);
@@ -71,6 +76,14 @@ html, body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+
+/* 时段主题 */
+body[data-period="morning"]   { --bg-page: linear-gradient(180deg, #FFF9E8 0%, #FFEEBB 40%, #FFF5E0 100%); }
+body[data-period="noon"]      { --bg-page: linear-gradient(180deg, #FFF5E0 0%, #FFE0B2 40%, #FFF3E0 100%); }
+body[data-period="afternoon"]{ --bg-page: linear-gradient(180deg, #FFF0F5 0%, #E8F5F0 40%, #F3E5F5 100%); }
+body[data-period="evening"]   { --bg-page: linear-gradient(180deg, #EDE7F6 0%, #E8EAF6 40%, #E3F2FD 100%); }
+body[data-period="night"]     { --bg-page: linear-gradient(180deg, #263238 0%, #1A237E 40%, #0D1B2A 100%); }
+body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-card: rgba(55,71,79,0.7); }
 
 /* ============================================================
    ☁️ 漂浮云朵装饰
@@ -153,6 +166,25 @@ html, body {
 @keyframes gentleBounce {
   0%, 100% { transform: translateY(0) rotate(-5deg); }
   50%      { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* ============================================================
+   🐉 滚动跟随浮动奶龙
+   ============================================================ */
+.scroll-nailong {
+  position: fixed;
+  bottom: 20px;
+  right: 12px;
+  width: 50px; height: 50px;
+  z-index: 80;
+  opacity: 0.7;
+  transition: transform 0.3s ease, opacity 0.3s;
+  pointer-events: none;
+  animation: scrollFloat 4s ease-in-out infinite;
+}
+@keyframes scrollFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-8px) rotate(3deg); }
 }
 
 /* ============================================================
@@ -382,6 +414,107 @@ html, body {
 }
 
 /* ============================================================
+   💬 奶龙语录气泡
+   ============================================================ */
+.nailong-quote {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  border: 1px solid rgba(255,255,255,0.6);
+  font-size: 14px;
+  color: var(--text-main);
+  font-weight: 600;
+  line-height: 1.6;
+  position: relative;
+  overflow: hidden;
+  animation: quoteFadeIn 0.6s ease-out;
+}
+.nailong-quote::before {
+  content: '🐉';
+  position: absolute;
+  top: -2px; right: 6px;
+  font-size: 40px;
+  opacity: 0.12;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+@keyframes quoteFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.quote-text { position: relative; z-index: 1; padding-right: 30px; }
+
+/* ============================================================
+   😤 闲置催促气泡
+   ============================================================ */
+.idle-bubble {
+  position: fixed;
+  bottom: 90px; right: 15px;
+  background: linear-gradient(135deg, var(--sakura-pink), var(--peach));
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 20px 20px 20px 4px;
+  box-shadow: 0 4px 16px rgba(255,179,186,0.3);
+  z-index: 90;
+  opacity: 0;
+  transform: translateY(10px) scale(0.8);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  max-width: 200px;
+}
+.idle-bubble.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ============================================================
+   🔥 连续签到计数器
+   ============================================================ */
+.streak-bar {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  border: 1px solid rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.streak-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.streak-label {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+.streak-num {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+.streak-fire {
+  font-size: 32px;
+  animation: fireWiggle 1.5s ease-in-out infinite;
+}
+@keyframes fireWiggle {
+  0%, 100% { transform: scale(1) rotate(-5deg); }
+  50%      { transform: scale(1.15) rotate(5deg); }
+}
+
+/* ============================================================
    🎯 快速操作三大功能卡片
    核心：奶龙图片100%不透明，无遮罩，清晰可见
    ============================================================ */
@@ -498,7 +631,7 @@ html, body {
 }
 
 /* ============================================================
-   📜 历史记录
+   📜 签到时间线
    ============================================================ */
 .history-section { margin-bottom: 20px; }
 .history-title {
@@ -507,46 +640,51 @@ html, body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 8px 4px 12px;
+  padding: 8px 4px 16px;
 }
-.history-item {
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px; top: 8px; bottom: 8px;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--checkin-color), var(--tempout-color), var(--checkout-color));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 16px;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  padding: 12px 16px;
   box-shadow: var(--shadow-soft);
   border: 1px solid rgba(255,255,255,0.5);
   transition: transform 0.2s;
 }
-.history-item:hover { transform: translateX(4px); }
-.history-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%; flex-shrink: 0;
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item:hover { transform: translateX(4px); }
+.timeline-dot {
+  position: absolute;
+  left: -26px; top: 14px;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  border: 3px solid #FFF;
+  box-shadow: 0 0 6px rgba(0,0,0,0.15);
 }
-.history-dot.in  { background: #81D4FA; box-shadow: 0 0 6px #81D4FA; }
-.history-dot.out { background: #F48FB1; box-shadow: 0 0 6px #F48FB1; }
-.history-dot.temp { background: #FFCC80; box-shadow: 0 0 6px #FFCC80; }
-.history-info { flex: 1; }
-.history-action {
+.timeline-dot.in   { background: var(--checkin-color); }
+.timeline-dot.temp { background: var(--tempout-color); }
+.timeline-dot.out  { background: var(--checkout-color); }
+.timeline-action {
   font-size: 15px; font-weight: 800;
   color: var(--text-main);
 }
-.history-time {
-  font-size: 13px; color: var(--text-sub);
-  font-weight: 600;
-  margin-top: 2px;
-}
-.history-status {
-  font-size: 13px;
-  font-weight: 800;
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, var(--mint-green), var(--sky-blue));
-  color: #2E7D5A;
+.timeline-time {
+  font-size: 12px; color: var(--text-sub);
+  font-weight: 600; margin-top: 2px;
 }
 
 /* ============================================================
@@ -705,6 +843,132 @@ html, body {
 .toast.show { opacity: 1; }
 
 /* ============================================================
+   🎊 撒花/彩纸动画
+   ============================================================ */
+.confetti-container {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px; height: 10px;
+  top: -20px;
+  opacity: 0;
+  animation: confettiFall 1.8s ease-in forwards;
+}
+.confetti-piece.circle { border-radius: 50%; }
+.confetti-piece.star   { border-radius: 2px; clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+.confetti-piece.strip  { width: 6px; height: 16px; border-radius: 3px; }
+
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
+}
+
+/* 签到成功奶龙弹跳 */
+.nailong-bounce {
+  animation: nailongBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+@keyframes nailongBounce {
+  0%   { transform: scale(1) rotate(0deg); }
+  30%  { transform: scale(1.3) rotate(-10deg); }
+  50%  { transform: scale(0.9) rotate(5deg); }
+  70%  { transform: scale(1.15) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ============================================================
+   🍃 季节飘落装饰（CSS only）
+   ============================================================ */
+.season-particle {
+  position: fixed;
+  top: -30px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+  font-size: 18px;
+  animation: seasonFall linear infinite;
+}
+@keyframes seasonFall {
+  0%   { transform: translateY(-5vh) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(105vh) translateX(60px) rotate(360deg); opacity: 0; }
+}
+body[data-period="night"] .season-particle { opacity: 0.3; }
+
+/* ============================================================
+   🏆 成就弹窗
+   ============================================================ */
+.achievement-toast {
+  position: fixed;
+  top: 80px; left: 50%;
+  transform: translateX(-50%) translateY(-120%);
+  background: linear-gradient(135deg, #FFF9E8, #FFE4A0, #FFD4B3);
+  color: var(--text-main);
+  padding: 16px 24px;
+  border-radius: var(--radius-xl);
+  font-size: 15px;
+  font-weight: 800;
+  z-index: 300;
+  box-shadow: 0 8px 32px rgba(255,179,71,0.4);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  max-width: 300px;
+  white-space: nowrap;
+}
+.achievement-toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+.achievement-toast .ach-icon { font-size: 28px; display: block; margin-bottom: 4px; }
+.achievement-toast .ach-name { font-size: 13px; color: var(--text-sub); font-weight: 600; margin-top: 4px; }
+
+/* ============================================================
+   🥚 长按奶龙彩蛋
+   ============================================================ */
+.easter-egg-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(255,249,232,0.95);
+  backdrop-filter: blur(10px);
+  align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.easter-egg-overlay.show { display: flex; }
+.easter-egg-img {
+  width: 150px; height: 150px;
+  object-fit: contain;
+  animation: easterEggSpin 1s ease-in-out;
+  filter: drop-shadow(0 8px 24px rgba(255,179,71,0.4));
+}
+@keyframes easterEggSpin {
+  0%   { transform: scale(0) rotate(-180deg); }
+  60%  { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.easter-egg-text {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  text-align: center;
+  animation: eggTextIn 0.6s 0.5s ease-out both;
+}
+@keyframes eggTextIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.easter-egg-sub {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 600;
+  animation: eggTextIn 0.6s 0.8s ease-out both;
+}
+
+/* ============================================================
    ⚠️ 错误提示
    ============================================================ */
 .error-banner {
@@ -826,6 +1090,23 @@ html, body {
       <div class="status-detail" id="statusDetail">请连接校园网后自动获取状态</div>
     </div>
 
+<!-- ===== 💬 奶龙语录 ===== -->
+<div class="nailong-quote" id="quoteBox">
+  <div class="quote-text" id="quoteText">今天也是适合签到的一天</div>
+</div>
+
+<!-- ===== 😤 闲置催促气泡 ===== -->
+<div class="idle-bubble" id="idleBubble">你在看什么？快去签到！</div>
+
+    <!-- ===== 🔥 连续签到计数器 ===== -->
+    <div class="streak-bar">
+      <div class="streak-info">
+        <span class="streak-label">连续签到</span>
+        <span class="streak-num" id="streakNum">0 天</span>
+      </div>
+      <span class="streak-fire">🔥</span>
+    </div>
+
     <!-- ===== 🎯 快速操作三大功能卡片 ===== -->
     <div class="action-grid">
       <!-- 签到入馆 -->
@@ -871,7 +1152,7 @@ html, body {
     <!-- ===== 📜 历史记录 ===== -->
     <div class="history-section" id="historySection" style="display:none;">
       <div class="history-title">📜 今日记录 · TODAY</div>
-      <div id="historyList"></div>
+      <div id="historyList" class="timeline"></div>
     </div>
 
     <!-- ===== 🍞 底部版本提示 ===== -->
@@ -902,8 +1183,31 @@ html, body {
   </div>
 </div>
 
+<!-- ===== 🏆 成就弹窗 ===== -->
+<div class="achievement-toast" id="achToast">
+  <span class="ach-icon" id="achIcon">🏆</span>
+  <span id="achTitle"></span>
+  <div class="ach-name" id="achName"></div>
+</div>
+
+<!-- ===== 🥚 长按彩蛋 ===== -->
+<div class="easter-egg-overlay" id="easterEgg" onclick="this.classList.remove('show')">
+  <img src="nailong3.png" class="easter-egg-img" alt="彩蛋奶龙">
+  <div class="easter-egg-text" id="eggText">你发现了奶龙的秘密！</div>
+  <div class="easter-egg-sub">点击任意处关闭</div>
+</div>
+
 <!-- ===== 🔔 Toast ===== -->
 <div class="toast" id="toast"></div>
+
+<!-- ===== 🎊 撒花容器 ===== -->
+<div class="confetti-container" id="confettiBox"></div>
+
+<!-- ===== 🐉 滚动跟随浮动奶龙 ===== -->
+<img src="nailong1.png" class="scroll-nailong" id="scrollNailong" alt="浮动奶龙">
+
+<!-- ===== 🍃 季节飘落装饰容器 ===== -->
+<div id="seasonBox"></div>
 
 <script>
 // ============================================================
@@ -917,6 +1221,66 @@ function updateTime() {
   document.getElementById('navTime').textContent =
     h + ':' + (m < 10 ? '0' : '') + m;
 }
+// ===== 🔥 连续签到计数器 =====
+function updateStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const lastDate = localStorage.getItem('lastCheckinDate');
+  const streak = parseInt(localStorage.getItem('checkinStreak') || '0');
+
+  if (lastDate === today) {
+    // 今天已经签过，只更新显示
+    document.getElementById('streakNum').textContent = streak + ' 天';
+    return streak;
+  }
+
+  // 计算日期差
+  const last = new Date(lastDate);
+  const diff = Math.floor((new Date(today) - last) / 86400000);
+
+  let newStreak = streak;
+  if (diff === 1) {
+    // 昨天签过，连续+1
+    newStreak = streak + 1;
+  } else if (diff > 1) {
+    // 断签了，重置
+    newStreak = 1;
+  } else if (!lastDate || isNaN(diff)) {
+    newStreak = 1;
+  }
+
+  document.getElementById('streakNum').textContent = newStreak + ' 天';
+  return newStreak;
+}
+
+function recordCheckin() {
+  const today = new Date().toISOString().slice(0, 10);
+  const streak = updateStreak();
+  localStorage.setItem('lastCheckinDate', today);
+  localStorage.setItem('checkinStreak', String(streak));
+}
+updateStreak(); // 页面加载时显示
+function applyTimeTheme() {
+  const h = new Date().getHours();
+  const body = document.body;
+  const detail = document.getElementById('statusDetail');
+  let theme = '', greeting = '';
+  if (h >= 6 && h < 12) {
+    theme = 'morning'; greeting = '早安！新的一天开始啦~';
+  } else if (h >= 12 && h < 14) {
+    theme = 'noon'; greeting = '午安~吃饱了才有力气学习';
+  } else if (h >= 14 && h < 18) {
+    theme = 'afternoon'; greeting = '下午好！继续加油鸭';
+  } else if (h >= 18 && h < 22) {
+    theme = 'evening'; greeting = '晚上好~图书馆还不闭门';
+  } else {
+    theme = 'night'; greeting = '夜深了...奶龙劝你早点休息';
+  }
+  body.setAttribute('data-period', theme);
+  if (!localStorage.getItem('checkedIn')) {
+    detail.textContent = greeting;
+  }
+}
+applyTimeTheme();
 updateTime();
 setInterval(updateTime, 30000);
 renderCheckInStatus();
@@ -1020,12 +1384,27 @@ function doAction(type) {
       currentUrl = url;
 
       // 保存签到状态
-      if (type === '1') localStorage.setItem('checkedIn', 'true');
-      if (type === '3') localStorage.setItem('checkedIn', 'false');
+      if (type === '1') {
+        localStorage.setItem('checkedIn', 'true');
+        recordCheckin();
+        localStorage.setItem('totalCheckins', String(parseInt(localStorage.getItem('totalCheckins')||'0') + 1));
+        setTimeout(checkAchievements, 1500);
+      }
+      if (type === '3') {
+        localStorage.setItem('checkedIn', 'false');
+        setTimeout(checkAchievements, 1500);
+      }
       // type '2' 临时离馆不改变状态
       renderCheckInStatus();
 
       addHistory(type, ts);
+
+      // 奶龙弹跳 + 撒花
+      const nailongEl = document.getElementById('statusNailong');
+      nailongEl.classList.remove('nailong-bounce');
+      void nailongEl.offsetWidth; // 触发 reflow 重播动画
+      nailongEl.classList.add('nailong-bounce');
+      launchConfetti();
 
       document.getElementById('resultIcon').textContent = '✅';
       document.getElementById('resultTitle').textContent = names[type] + ' 就绪';
@@ -1080,20 +1459,34 @@ function addHistory(type, ts) {
   const timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
 
   const item = document.createElement('div');
-  item.className = 'history-item';
+  item.className = 'timeline-item';
   item.innerHTML =
-    '<div class="history-dot ' + dots[type] + '"></div>' +
-    '<div class="history-info">' +
-      '<div class="history-action">' + names[type] + '</div>' +
-      '<div class="history-time">' + timeStr + ' · 时间戳 ' + ts + '</div>' +
-    '</div>' +
-    '<div class="history-status">✓ 就绪</div>';
+    '<div class="timeline-dot ' + dots[type] + '"></div>' +
+    '<div class="timeline-action">' + names[type] + '</div>' +
+    '<div class="timeline-time">' + timeStr + ' · 时间戳 ' + ts + '</div>';
   list.insertBefore(item, list.firstChild);
 
   // 更新菜单badge
   const badge = document.getElementById('menuBadge');
   badge.textContent = list.children.length;
   badge.style.display = 'inline-block';
+}
+
+// ===== 🎊 撒花动画 =====
+function launchConfetti() {
+  const box = document.getElementById('confettiBox');
+  const colors = ['#FFB3BA','#FFD6A5','#B8F0D8','#A0D8EF','#E8D5F2','#FFE4A0','#FF8A80','#82B1FF'];
+  const shapes = ['circle','star','strip'];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece ' + shapes[Math.floor(Math.random()*shapes.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = (Math.random() * 0.6) + 's';
+    el.style.animationDuration = (1.2 + Math.random() * 1) + 's';
+    box.appendChild(el);
+  }
+  setTimeout(() => { box.innerHTML = ''; }, 3000);
 }
 
 // ===== Toast =====
@@ -1103,6 +1496,163 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
+
+// ===== ⏰ 22:00 闭馆提醒 =====
+function checkClosingReminder() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  // 21:55 ~ 22:00 触发一次
+  if (h === 21 && m >= 55 && !localStorage.getItem('closingReminded_' + now.toISOString().slice(0,10))) {
+    localStorage.setItem('closingReminded_' + now.toISOString().slice(0,10), 'true');
+    speakNailong('快跑！图书馆要关门了！奶龙先撤了！');
+    showToast('⏰ 奶龙提醒：图书馆快关门了，快签离！');
+  }
+}
+setInterval(checkClosingReminder, 60000);
+setTimeout(checkClosingReminder, 5000);
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// ===== 🥚 长按奶龙彩蛋 =====
+const EGG_TEXTS = [
+  '你发现了奶龙的秘密！',
+  '奶龙说：你居然长按了我？！',
+  '隐藏成就：奶龙观察者',
+  '奶龙其实会飞，只是懒',
+  '彩蛋！你比99%的人有耐心',
+  '奶龙被你摸头了，好害羞'
+];
+let longPressTimer = null;
+document.querySelectorAll('.sticker img, .scroll-nailong, .status-nailong, .nav-icon').forEach(el => {
+  el.style.cursor = 'pointer';
+  el.addEventListener('touchstart', e => {
+    longPressTimer = setTimeout(() => {
+      document.getElementById('eggText').textContent = EGG_TEXTS[Math.floor(Math.random()*EGG_TEXTS.length)];
+      document.getElementById('easterEgg').classList.add('show');
+      speakNailong('被你发现了！奶龙害羞了~');
+    }, 1500);
+  }, {passive:true});
+  el.addEventListener('touchend', () => clearTimeout(longPressTimer));
+  el.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+  // 桌面端也支持
+  el.addEventListener('mousedown', () => {
+    longPressTimer = setTimeout(() => {
+      document.getElementById('eggText').textContent = EGG_TEXTS[Math.floor(Math.random()*EGG_TEXTS.length)];
+      document.getElementById('easterEgg').classList.add('show');
+      speakNailong('被你发现了！奶龙害羞了~');
+    }, 1500);
+  });
+  el.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+  el.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
+});
+
+// ===== 🏆 签到成就系统 =====
+const ACHIEVEMENTS = [
+  { id: 'first_checkin', name: '初来乍到', desc: '完成第一次签到', icon: '🌟', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 1 },
+  { id: 'check_3',      name: '三天打鱼', desc: '连续签到3天', icon: '🐟', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 3 },
+  { id: 'check_7',      name: '一周勇士', desc: '连续签到7天', icon: '⚔️', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 7 },
+  { id: 'check_30',     name: '月度学霸', desc: '连续签到30天', icon: '📚', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 30 },
+  { id: 'night_owl',    name: '深夜签到侠', desc: '23:00后签到', icon: '🦉', check: () => new Date().getHours() >= 23 },
+  { id: 'early_bird',   name: '早起鸟儿', desc: '8:00前签到', icon: '🐦', check: () => new Date().getHours() < 8 },
+  { id: 'back_forth',   name: '签了又签', desc: '同一天签到+签离', icon: '🔄', check: () => localStorage.getItem('checkedIn')==='false' && localStorage.getItem('lastCheckinDate')===new Date().toISOString().slice(0,10) },
+  { id: 'total_10',     name: '签到达人', desc: '累计签到10次', icon: '🏅', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 10 },
+  { id: 'total_50',     name: '签到狂魔', desc: '累计签到50次', icon: '👑', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 50 },
+];
+
+function checkAchievements() {
+  const unlocked = JSON.parse(localStorage.getItem('unlockedAch') || '[]');
+  ACHIEVEMENTS.forEach(a => {
+    if (!unlocked.includes(a.id) && a.check()) {
+      unlocked.push(a.id);
+      showAchievement(a);
+    }
+  });
+  localStorage.setItem('unlockedAch', JSON.stringify(unlocked));
+}
+
+function showAchievement(a) {
+  document.getElementById('achIcon').textContent = a.icon;
+  document.getElementById('achTitle').textContent = a.name;
+  document.getElementById('achName').textContent = a.desc;
+  const toast = document.getElementById('achToast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+  speakNailong('恭喜解锁成就：' + a.name + '！');
+}
+
+// ===== 😤 闲置催促 =====
+let idleTimer = null;
+const idleMsgs = ['你在看什么？快去签到！','奶龙等你很久了...','还没签到？奶龙急了！','别看了，签了吗？'];
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  document.getElementById('idleBubble').classList.remove('show');
+  idleTimer = setTimeout(() => {
+    const bubble = document.getElementById('idleBubble');
+    bubble.textContent = idleMsgs[Math.floor(Math.random() * idleMsgs.length)];
+    bubble.classList.add('show');
+    // 奶龙抖动
+    const sn = document.getElementById('scrollNailong');
+    if (sn) { sn.style.animation = 'none'; void sn.offsetWidth; sn.style.animation = 'scrollFloat 0.3s ease-in-out 3'; }
+  }, 30000);
+}
+['click','touchstart','scroll','keydown'].forEach(e => document.addEventListener(e, resetIdleTimer, {passive:true}));
+resetIdleTimer();
+const NAILONG_QUOTES = [
+  '今天也是适合签到的一天',
+  '你为什么还没签到？奶龙哭了',
+  '签到使我快乐，不签使我焦虑',
+  '图书馆那么大，奶龙想去看看',
+  '签到的不是时间，是青春',
+  '别卷了，先签到吧',
+  '你签的每次到，都是奶龙的骄傲',
+  '今天图书馆的空调温度刚好',
+  '摸鱼可以，但别忘了签离',
+  '签个到怎么了？奶龙每天都签',
+  '奶龙在图书馆等你，风雨无阻',
+  '别人在努力，你在签到，这就够了',
+  '签到入馆：开启学霸模式',
+  '临时离馆：战略性撤退',
+  '签离出馆：完美收官'
+];
+function showRandomQuote() {
+  const el = document.getElementById('quoteText');
+  if (el) el.textContent = NAILONG_QUOTES[Math.floor(Math.random() * NAILONG_QUOTES.length)];
+}
+showRandomQuote();
+
+// ===== 滚动跟随浮动奶龙 =====
+window.addEventListener('scroll', function() {
+  const el = document.getElementById('scrollNailong');
+  if (!el) return;
+  const scrollY = window.scrollY || window.pageYOffset;
+  el.style.transform = 'translateY(0) rotate(' + (-3 + scrollY * 0.01) + 'deg)';
+  el.style.opacity = scrollY > 50 ? '0.7' : '0.3';
+});
+
+// ===== 🍃 季节飘落装饰 =====
+function createSeasonParticles() {
+  const box = document.getElementById('seasonBox');
+  if (!box) return;
+  const month = new Date().getMonth() + 1;
+  let symbols = [];
+  if (month >= 3 && month <= 5)      symbols = ['🌸','💮','🍃','🌷','✿'];   // 春
+  else if (month >= 6 && month <= 8)  symbols = ['☀️','🌊','🍦','🍉','🐚'];   // 夏
+  else if (month >= 9 && month <= 11) symbols = ['🍂','🍁','🌾','🌰','🥮'];   // 秋
+  else                                symbols = ['❄️','⛄','🌨️','✨','🎄'];   // 冬
+
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.className = 'season-particle';
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.fontSize = (14 + Math.random() * 12) + 'px';
+    el.style.animationDuration = (6 + Math.random() * 8) + 's';
+    el.style.animationDelay = (Math.random() * 10) + 's';
+    box.appendChild(el);
+  }
+}
+createSeasonParticles();
 
 // ===== 点击弹窗遮罩关闭 =====
 document.getElementById('resultOverlay').addEventListener('click', function(e) {
