@@ -38,16 +38,43 @@ n ============================================================ */
   --text-sub: #9A8B7A;          /* 次要文字 */
   --text-light: #FFF;           /* 亮色文字 */
 
-  /* 背景 */
-  /* 背景 */
+  /* 背景 - 带微妙渐变的玻璃质感 */
   --bg-page: linear-gradient(180deg, #FFF9E8 0%, #FFF0F5 40%, #E8F5F0 100%);
-  --bg-card: rgba(255, 255, 255, 0.72);
-  --bg-glass: rgba(255, 255, 255, 0.55);
+  --bg-card: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.80) 0%,
+    rgba(255, 255, 255, 0.68) 50%,
+    rgba(255, 253, 250, 0.72) 100%);
+  --bg-glass: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 252, 245, 0.48) 100%);
 
-  /* 阴影 */
-  --shadow-soft: 0 8px 32px rgba(139, 119, 99, 0.12);
-  --shadow-hover: 0 12px 40px rgba(139, 119, 99, 0.18);
-  --shadow-inset: inset 0 2px 8px rgba(255, 255, 255, 0.8);
+  /* 阴影 - 多层叠加系统 */
+  --shadow-contact: 0 1px 2px rgba(139, 119, 99, 0.06);       /* 接触阴影（最淡） */
+  --shadow-mid:     0 4px 12px rgba(139, 119, 99, 0.10);      /* 中部阴影 */
+  --shadow-far:     0 12px 32px rgba(139, 119, 99, 0.14);     /* 远距阴影 */
+  --shadow-elevated: 0 8px 28px rgba(139, 119, 99, 0.16);     /* 悬浮态远距 */
+  --shadow-hover:   0 16px 48px rgba(139, 119, 99, 0.20);    /* hover 远距 */
+  --shadow-inset:   inset 0 1px 0 rgba(255, 255, 255, 0.9),  /* 顶部高光 */
+                    inset 0 -1px 2px rgba(139, 119, 99, 0.04); /* 底部暗边 */
+  /* 组合：默认卡片 */
+  --shadow-card: var(--shadow-contact), var(--shadow-mid), var(--shadow-far), var(--shadow-inset);
+  /* 组合：悬浮卡片 */
+  --shadow-card-hover: 0 2px 6px rgba(139, 119, 99, 0.08),
+                        0 8px 24px rgba(139, 119, 99, 0.14),
+                        0 20px 56px rgba(139, 119, 99, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  /* 按钮专用 */
+  --shadow-btn: 0 3px 10px rgba(255, 179, 71, 0.25),
+                 0 1px 4px rgba(255, 179, 71, 0.15);
+  --shadow-btn-hover: 0 6px 20px rgba(255, 179, 71, 0.35),
+                       0 2px 8px rgba(255, 179, 71, 0.2);
+  --shadow-btn-press: 0 1px 3px rgba(255, 179, 71, 0.2),
+                       inset 0 1px 3px rgba(139, 119, 99, 0.08);
+
+  /* 动画曲线 - 专业贝塞尔 */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);           /* 弹性回弹 */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);              /* 平滑进出 */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);       /* 过冲弹跳 */
 
   /* 圆角 */
   --radius-sm: 16px;
@@ -149,18 +176,18 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .sticker-tr {
   top: 80px; right: 8px;
   width: 60px; height: 60px;
-  animation: gentleBounce 3s ease-in-out infinite;
+  animation: gentleBounce 3s var(--ease-smooth) infinite;
 }
 .sticker-bl {
   bottom: 60px; left: 8px;
   width: 70px; height: 70px;
-  animation: gentleBounce 3.5s ease-in-out infinite;
+  animation: gentleBounce 3.5s var(--ease-smooth) infinite;
   animation-delay: 0.5s;
 }
 .sticker-br {
   bottom: 100px; right: 8px;
   width: 55px; height: 55px;
-  animation: gentleBounce 2.8s ease-in-out infinite;
+  animation: gentleBounce 2.8s var(--ease-smooth) infinite;
   animation-delay: 1s;
 }
 @keyframes gentleBounce {
@@ -178,9 +205,9 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   width: 50px; height: 50px;
   z-index: 80;
   opacity: 0.7;
-  transition: transform 0.3s ease, opacity 0.3s;
+  transition: transform 0.3s var(--ease-smooth), opacity 0.3s;
   pointer-events: none;
-  animation: scrollFloat 4s ease-in-out infinite;
+  animation: scrollFloat 4s var(--ease-smooth) infinite;
 }
 @keyframes scrollFloat {
   0%, 100% { transform: translateY(0) rotate(-3deg); }
@@ -209,10 +236,14 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   background: linear-gradient(135deg, var(--cream-yellow) 0%, var(--peach) 100%);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   padding: 16px 20px 14px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-card);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: box-shadow 0.3s var(--ease-smooth);
+}
+.top-nav:hover {
+  box-shadow: var(--shadow-card-hover);
 }
 .nav-left {
   display: flex;
@@ -224,16 +255,20 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: 14px;
   background: rgba(255,255,255,0.6);
   backdrop-filter: blur(8px);
-  border: none;
+  border: 1px solid rgba(255,255,255,0.4);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.25s var(--ease-smooth);
+  box-shadow: var(--shadow-contact), var(--shadow-mid);
 }
-.menu-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.9); }
+.menu-btn:hover {
+  background: rgba(255,255,255,0.85);
+  transform: scale(1.05) rotate(-2deg);
+}
+.menu-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.95); }
   .nav-title {
     font-size: 20px;
     font-weight: 800;
@@ -292,7 +327,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   width: 72px; height: 72px;
   border-radius: 50%;
   border: 4px solid #FFF;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-mid), inset 0 -2px 4px rgba(0,0,0,0.05);
   object-fit: cover;
   margin-bottom: 10px;
 }
@@ -315,7 +350,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: var(--radius-sm);
   margin-bottom: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s var(--ease-smooth);
   font-size: 15px;
   font-weight: 700;
   color: var(--text-main);
@@ -351,10 +386,15 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: var(--radius-md);
   padding: 24px 20px;
   margin-bottom: 20px;
-  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  box-shadow: var(--shadow-card);
   border: 1px solid rgba(255,255,255,0.6);
   position: relative;
   overflow: hidden;
+  transition: box-shadow 0.35s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+}
+.status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
 }
 .status-card::before {
   content: '';
@@ -363,6 +403,25 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   width: 100px; height: 100px;
   background: radial-gradient(circle, var(--cream-yellow) 0%, transparent 70%);
   opacity: 0.5;
+  pointer-events: none;
+}
+/* 磨砂玻璃顶部高光 */
+.status-card::after,
+.nailong-quote::after,
+.streak-bar::after,
+.timeline-item::after,
+.ach-cell::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.7) 20%,
+    rgba(255,255,255,0.9) 50%,
+    rgba(255,255,255,0.7) 80%,
+    transparent 100%);
+  border-radius: inherit;
   pointer-events: none;
 }
 .status-nailong {
@@ -397,7 +456,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: 50%;
   background: #34C759;
   box-shadow: 0 0 8px #34C759;
-  animation: pulseDot 2s ease-in-out infinite;
+  animation: pulseDot 2s var(--ease-smooth) infinite;
 }
 .status-dot.offline {
   background: #FF9F0A;
@@ -422,7 +481,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: var(--radius-sm);
   padding: 14px 18px;
   margin-bottom: 16px;
-  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  box-shadow: var(--shadow-card);
   border: 1px solid rgba(255,255,255,0.6);
   font-size: 14px;
   color: var(--text-main);
@@ -430,7 +489,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   line-height: 1.6;
   position: relative;
   overflow: hidden;
-  animation: quoteFadeIn 0.6s ease-out;
+  animation: quoteFadeIn 0.5s var(--ease-smooth) both;
 }
 .nailong-quote::before {
   content: '';
@@ -460,11 +519,11 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   font-weight: 700;
   padding: 10px 16px;
   border-radius: 20px 20px 20px 4px;
-  box-shadow: 0 4px 16px rgba(255,179,186,0.3);
+  box-shadow: 0 4px 20px rgba(255,179,186,0.35), 0 1px 4px rgba(255,179,186,0.2);
   z-index: 90;
   opacity: 0;
   transform: translateY(10px) scale(0.8);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s var(--ease-spring);
   pointer-events: none;
   max-width: 200px;
 }
@@ -483,7 +542,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: var(--radius-sm);
   padding: 14px 18px;
   margin-bottom: 16px;
-  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  box-shadow: var(--shadow-card);
   border: 1px solid rgba(255,255,255,0.6);
   display: flex;
   align-items: center;
@@ -508,7 +567,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 }
 .streak-fire {
   font-size: 32px;
-  animation: fireWiggle 1.5s ease-in-out infinite;
+  animation: fireWiggle 1.5s var(--ease-smooth) infinite;
 }
 @keyframes fireWiggle {
   0%, 100% { transform: scale(1) rotate(-5deg); }
@@ -536,18 +595,42 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   padding: 20px;
   cursor: pointer;
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.25s;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s var(--ease-spring),
+              box-shadow 0.3s var(--ease-smooth),
+              border-color 0.3s;
   border: 3px solid rgba(255,255,255,0.5);
 }
 /* hover 放大 */
 .action-card:hover {
-  transform: scale(1.04);
-  box-shadow: var(--shadow-hover);
+  transform: scale(1.03) translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(255,255,255,0.8);
 }
 .action-card:active {
-  transform: scale(0.97);
+  transform: scale(0.97) translateY(1px);
+  transition-duration: 0.15s;
+}
+/* 卡片光泽扫过 */
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -100%;
+  width: 40%; height: 200%;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.25) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-15deg);
+  transition: left 0.7s var(--ease-smooth);
+  pointer-events: none;
+  z-index: 3;
+  border-radius: inherit;
+}
+.action-card:hover::before {
+  left: 160%;
 }
 
 /* ----- 奶龙背景图（100%不透明，无遮罩） ----- */
@@ -662,12 +745,12 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   backdrop-filter: blur(16px);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-card);
   border: 1px solid rgba(255,255,255,0.5);
-  transition: transform 0.2s;
+  transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s;
 }
 .timeline-item:last-child { margin-bottom: 0; }
-.timeline-item:hover { transform: translateX(4px); }
+.timeline-item:hover { transform: translateX(4px); box-shadow: var(--shadow-elevated); }
 .timeline-dot {
   position: absolute;
   left: -26px; top: 14px;
@@ -704,7 +787,7 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   width: 80px; height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  animation: nailongSpin 1.2s ease-in-out infinite;
+  animation: nailongSpin 1.2s var(--ease-smooth) infinite;
   box-shadow: 0 8px 24px rgba(255, 179, 71, 0.3);
 }
 @keyframes nailongSpin {
@@ -736,8 +819,8 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   padding: 20px 20px 36px;
   width: 100%;
   max-width: 480px;
-  animation: slideUp 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 -8px 40px rgba(0,0,0,0.12);
+  animation: slideUp 0.4s var(--ease-smooth);
+  box-shadow: 0 -8px 48px rgba(0,0,0,0.14), 0 -2px 12px rgba(0,0,0,0.08);
 }
 @keyframes slideUp {
   from { transform: translateY(100%); }
@@ -787,13 +870,38 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   font-weight: 800;
   cursor: pointer;
   margin-bottom: 10px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(255, 179, 71, 0.25);
+  box-shadow: var(--shadow-btn);
+  transition: all 0.4s var(--ease-spring);
   font-family: var(--font-cartoon);
+  position: relative;
+  overflow: hidden;
+}
+.btn-cream:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-btn-hover);
 }
 .btn-cream:active {
-  transform: scale(0.96);
-  box-shadow: 0 2px 8px rgba(255, 179, 71, 0.2);
+  transform: scale(0.96) translateY(1px);
+  box-shadow: var(--shadow-btn-press);
+}
+/* 按钮光泽扫过效果 */
+.btn-cream::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -100%;
+  width: 50%; height: 200%;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.35) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s var(--ease-smooth);
+  pointer-events: none;
+}
+.btn-cream:hover::after {
+  left: 150%;
 }
 .btn-cream-secondary {
   width: 100%; height: 54px;
@@ -804,10 +912,14 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   font-size: 17px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s var(--ease-smooth);
   font-family: var(--font-cartoon);
+  box-shadow: var(--shadow-contact), var(--shadow-mid);
 }
-.btn-cream-secondary:active { transform: scale(0.96); background: var(--cream-yellow); color: var(--text-main); }
+.btn-cream-secondary:hover {
+  background: rgba(255,228,160,0.5);
+}
+.btn-cream-secondary:active { transform: scale(0.96) translateY(1px); background: var(--cream-yellow); color: var(--text-main); }
 
 /* ============================================================
    🏆 成就展示栏
@@ -826,9 +938,9 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   border-radius: var(--radius-sm);
   padding: 12px 8px 10px;
   text-align: center;
-  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  box-shadow: var(--shadow-card);
   border: 1px solid rgba(255,255,255,0.5);
-  transition: all 0.25s;
+  transition: all 0.3s var(--ease-smooth);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -842,17 +954,18 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   filter: grayscale(1) brightness(0.7);
 }
 .ach-cell.unlocked .ach-cell-icon {
-  animation: achIconFloat 3s ease-in-out infinite;
+  animation: achIconFloat 3s var(--ease-spring) infinite;
 }
 @keyframes achIconFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-3px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-4px) rotate(-3deg); }
+  75%      { transform: translateY(-2px) rotate(3deg); }
 }
 .ach-cell-icon {
   font-size: 28px;
   display: block;
   margin-bottom: 4px;
-  transition: transform 0.2s;
+  transition: transform 0.3s var(--ease-spring);
 }
 .ach-cell-name {
   font-size: 11px;
@@ -866,14 +979,31 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .ach-cell-desc {
   display: none; /* 点击时在 tooltip 中展示 */
 }
-/* 新解锁闪光 */
+/* 新解锁闪光 - 弹性过冲 */
 .ach-cell.just-unlocked {
-  animation: achUnlock 0.8s ease-out;
+  animation: achUnlock 0.8s var(--ease-bounce) both;
 }
 @keyframes achUnlock {
-  0%   { transform: scale(0.5); opacity: 0; box-shadow: 0 0 0 0 rgba(255,179,71,0.6); }
-  50%  { transform: scale(1.15); box-shadow: 0 0 20px 8px rgba(255,179,71,0.3); }
-  100% { transform: scale(1); opacity: 1; box-shadow: var(--shadow-soft); }
+  0%   { transform: scale(0.7); opacity: 0; box-shadow: 0 0 0 0 rgba(255,179,71,0); }
+  40%  { transform: scale(1.18); opacity: 1; box-shadow: 0 0 24px 8px rgba(255,179,71,0.35); }
+  60%  { transform: scale(0.95); box-shadow: 0 0 12px 4px rgba(255,179,71,0.2); }
+  80%  { transform: scale(1.04); box-shadow: 0 0 6px 2px rgba(255,179,71,0.15); }
+  100% { transform: scale(1); opacity: 1; box-shadow: var(--shadow-card-hover); }
+}
+/* 解锁后持续光晕脉冲 */
+.ach-cell.just-unlocked::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--cream-yellow), var(--sakura-pink));
+  z-index: -1;
+  animation: achGlowPulse 2s var(--ease-smooth) both;
+  opacity: 0.5;
+}
+@keyframes achGlowPulse {
+  0% { opacity: 0.6; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
 }
 
 /* 成就详情 tooltip */
@@ -888,10 +1018,10 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   font-size: 14px;
   font-weight: 700;
   z-index: 250;
-  box-shadow: 0 8px 24px rgba(255,179,71,0.3);
+  box-shadow: 0 8px 32px rgba(255,179,71,0.35), 0 2px 8px rgba(139,119,99,0.12);
   opacity: 0;
   pointer-events: none;
-  transition: all 0.3s ease;
+  transition: opacity 0.3s var(--ease-smooth);
   white-space: nowrap;
   text-align: center;
 }
@@ -948,7 +1078,8 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   transition: opacity 0.3s;
   pointer-events: none;
   white-space: nowrap;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-elevated);
+  transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
 }
 .toast.show { opacity: 1; }
 
@@ -977,15 +1108,16 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
 }
 
-/* 签到成功奶龙弹跳 */
+/* 签到成功奶龙弹跳 - 多段弹性 */
 .nailong-bounce {
-  animation: nailongBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: nailongBounce 0.7s var(--ease-bounce);
 }
 @keyframes nailongBounce {
   0%   { transform: scale(1) rotate(0deg); }
-  30%  { transform: scale(1.3) rotate(-10deg); }
-  50%  { transform: scale(0.9) rotate(5deg); }
-  70%  { transform: scale(1.15) rotate(-3deg); }
+  20%  { transform: scale(1.35) rotate(-12deg); }
+  40%  { transform: scale(0.88) rotate(6deg); }
+  60%  { transform: scale(1.12) rotate(-4deg); }
+  80%  { transform: scale(0.97) rotate(2deg); }
   100% { transform: scale(1) rotate(0deg); }
 }
 
@@ -1023,7 +1155,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   font-size: 15px;
   font-weight: 800;
   z-index: 300;
-  box-shadow: 0 8px 32px rgba(255,179,71,0.4);
+  box-shadow: 0 8px 40px rgba(255,179,71,0.45), 0 2px 12px rgba(139,119,99,0.15);
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-align: center;
   max-width: 300px;
@@ -1128,7 +1260,8 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     max-width: 440px;
     min-height: auto;
     border-radius: var(--radius-xl);
-    box-shadow: 0 20px 60px rgba(139, 119, 99, 0.2);
+    box-shadow: 0 20px 64px rgba(139, 119, 99, 0.22),
+                0 4px 16px rgba(139, 119, 99, 0.12);
     overflow: hidden;
     background: var(--bg-page);
   }
@@ -1183,7 +1316,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
         <span>今日记录</span>
         <span class="menu-badge" id="menuBadge" style="display:none">0</span>
       </div>
-      <div class="menu-item" onclick="toggleMenu(); showToast('v2.2 奶龙主题版')">
+      <div class="menu-item" onclick="toggleMenu(); showToast('v2.5 质感升级版')">
         <span class="icon">ℹ️</span>
         <span>关于</span>
       </div>
@@ -1289,7 +1422,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
-      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.2<br>
+      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.5<br>
       奶龙奶油卡通风 · 请连接校园网使用
     </div>
 
