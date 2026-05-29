@@ -817,7 +817,7 @@ html, body {
 
     <!-- ===== 🎴 状态信息卡片 ===== -->
     <div class="status-card">
-      <img src="nailong-status.jpg" class="status-nailong" alt="">
+      <img src="nailong-urge.png" class="status-nailong" id="statusNailong" alt="奶龙状态">
       <div class="status-label">📡 当前状态</div>
       <div class="status-value">
         <span class="status-dot offline" id="statusDot"></span>
@@ -919,6 +919,7 @@ function updateTime() {
 }
 updateTime();
 setInterval(updateTime, 30000);
+renderCheckInStatus();
 
 // ===== 菜单切换 =====
 function toggleMenu() {
@@ -926,16 +927,35 @@ function toggleMenu() {
   document.getElementById('menuOverlay').classList.toggle('show');
 }
 
-// ===== 状态更新 =====
+// ===== 奶龙签到状态渲染 =====
+function renderCheckInStatus() {
+  const isCheckedIn = localStorage.getItem('checkedIn') === 'true';
+  const nailongImg = document.getElementById('statusNailong');
+  const statusValue = document.getElementById('statusValue');
+  const statusDetail = document.getElementById('statusDetail');
+  const statusDot = document.getElementById('statusDot');
+
+  if (isCheckedIn) {
+    nailongImg.src = 'nailong-happy.png';
+    statusValue.textContent = '在馆学习中';
+    statusDetail.textContent = '奶龙陪你加油鸭！';
+    statusDot.classList.remove('offline');
+  } else {
+    nailongImg.src = 'nailong-urge.png';
+    statusValue.textContent = '未签到';
+    statusDetail.textContent = '快去签到！奶龙等急了';
+    statusDot.classList.add('offline');
+  }
+}
+
+// ===== 状态更新（网络健康检查） =====
 function updateStatus() {
   fetch('https://libst.sdufe.edu.cn/api.php/v3qrtime', {
     mode: 'cors', cache: 'no-cache'
   }).then(r => r.json()).then(d => {
     if (d && d.status === 1) {
       document.getElementById('errorBanner').classList.remove('show');
-      document.getElementById('statusValue').textContent = '已连接';
-      document.getElementById('statusDot').classList.remove('offline');
-      document.getElementById('statusDetail').textContent = 'API正常 · 时间戳 ' + d.data;
+      renderCheckInStatus();
     }
   }).catch(() => {
     document.getElementById('errorBanner').classList.add('show');
@@ -972,6 +992,12 @@ function doAction(type) {
       const ts = d.data;
       const url = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
       currentUrl = url;
+
+      // 保存签到状态
+      if (type === '1') localStorage.setItem('checkedIn', 'true');
+      if (type === '3') localStorage.setItem('checkedIn', 'false');
+      // type '2' 临时离馆不改变状态
+      renderCheckInStatus();
 
       addHistory(type, ts);
 
