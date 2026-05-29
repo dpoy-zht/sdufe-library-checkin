@@ -433,12 +433,13 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   animation: quoteFadeIn 0.6s ease-out;
 }
 .nailong-quote::before {
-  content: '🐉';
+  content: '';
   position: absolute;
-  top: -2px; right: 6px;
-  font-size: 40px;
-  opacity: 0.12;
-  transform: rotate(15deg);
+  top: 4px; right: 6px;
+  width: 44px; height: 44px;
+  background: url('nailong-eat.png') center/contain no-repeat;
+  opacity: 0.18;
+  transform: rotate(8deg);
   pointer-events: none;
 }
 @keyframes quoteFadeIn {
@@ -915,6 +916,21 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 }
 .footer .heart { color: #FF8A80; }
 
+.footer-nailong {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.footer-nailong img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+.footer-nailong:active img { transform: scale(1.1) rotate(-5deg); }
+
 /* ============================================================
    🔔 Toast
    ============================================================ */
@@ -1070,14 +1086,24 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   background: linear-gradient(135deg, #FFE8E8, #FFF0F0);
   border: 2px solid #FFB3BA;
   border-radius: var(--radius-sm);
-  padding: 14px 16px;
+  padding: 14px 16px 50px;
   margin-bottom: 16px;
   font-size: 14px;
   color: #E57373;
   line-height: 1.5;
   font-weight: 700;
+  position: relative;
+  overflow: hidden;
 }
 .error-banner.show { display: block; }
+.error-nailong {
+  position: absolute;
+  right: -6px; bottom: -10px;
+  width: 60px; height: 60px;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0.85;
+}
 .error-banner .retry-btn {
   color: #FF8A65;
   font-weight: 800;
@@ -1171,6 +1197,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     <div class="error-banner" id="errorBanner">
       <span id="errorText">网络错误，请连接校园网 SDUFE WiFi</span>
       <span class="retry-btn" onclick="retryTimestamp()">重试</span>
+      <img src="nailong-surprise.png" class="error-nailong" alt="惊讶奶龙">
     </div>
 
     <!-- ===== 🎴 状态信息卡片 ===== -->
@@ -1255,6 +1282,11 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
       <div class="ach-grid" id="achGrid"></div>
     </div>
 
+    <!-- ===== 🦵 彩蛋奶龙 ===== -->
+    <div class="footer-nailong">
+      <img src="nailong-longleg.jpg" alt="长腿奶龙">
+    </div>
+
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
       <span class="heart">❤</span> SDUFE Library Remote Check-in v2.2<br>
@@ -1266,8 +1298,8 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🍥 加载动画 ===== -->
 <div class="loading-overlay" id="loading">
-  <img src="nailong3.png" class="nailong-loader" alt="奶龙加载中">
-  <div class="loading-text">奶龙正在获取时间...</div>
+  <img src="nailong-sleep.png" class="nailong-loader" alt="奶龙加载中">
+  <div class="loading-text">奶龙正在获取时间...💤</div>
 </div>
 
 <!-- ===== 🎉 结果弹窗 ===== -->
