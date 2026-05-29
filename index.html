@@ -14,8 +14,8 @@
     background-color: #F2F2F7;
     background-image: url('background.png');
     background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+    background-position: center 55%;
+    background-size: 75% auto;
     background-attachment: fixed;
     color: #000;
     min-height: 100vh;
@@ -23,12 +23,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* 背景遮罩层 - 降低背景图亮度确保不遮挡 */
+  /* 背景遮罩层 */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(242, 242, 247, 0.88);
+    background: rgba(242, 242, 247, 0.55);
     z-index: 0;
     pointer-events: none;
   }
