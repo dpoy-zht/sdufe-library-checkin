@@ -3,980 +3,922 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SDUFE 图书馆签到 🐉</title>
+<title>🐉 奶龙图书馆签到</title>
+
+<!-- ===== 圆润卡通字体 ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+
 <style>
-/* ============================================
-   🐉 奶龙卡通主题 · 主题色变量（可在此修改全局风格）
-   ============================================ */
+/* ============================================================
+   🎨 奶龙奶油卡通风主题变量
+   修改以下变量即可一键换肤
+n ============================================================ */
 :root {
-  /* ── 主色调 ── */
-  --bg-primary:      #FFFDF7;    /* 奶白背景 */
-  --bg-secondary:    #FFF8E7;    /* 暖奶黄背景 */
-  --bg-card:         rgba(255, 255, 255, 0.65);  /* 磨砂玻璃卡片 */
-  --bg-card-solid:   #FFFFFF;
+  /* 主色调 - 马卡龙奶油系 */
+  --cream-yellow: #FFE4A0;      /* 鹅黄 */
+  --cream-white: #FFFDF7;       /* 奶白 */
+  --mint-green: #B8F0D8;        /* 浅薄荷绿 */
+  --sakura-pink: #FFD1DC;       /* 樱花粉 */
+  --sky-blue: #B8E4F0;          /* 天蓝 */
+  --lavender: #E8D5F2;          /* 薰衣草 */
+  --peach: #FFD4B3;             /* 蜜桃 */
 
-  /* ── 马卡龙色系 ── */
-  --milk-yellow:     #FFE4A0;    /* 鹅黄 · 主色 */
-  --milk-yellow-deep:#FFCC5C;    /* 深鹅黄 */
-  --mint-green:      #B8F0D8;    /* 浅薄荷绿 */
-  --mint-deep:       #7DCEA0;    /* 深薄荷 */
-  --sakura-pink:     #FFD1DC;    /* 樱花粉 */
-  --sakura-deep:     #FF9EB5;    /* 深樱花 */
-  --sky-blue:        #B8E4F0;    /* 浅天蓝 */
-  --lavender:        #E8D5F5;    /* 浅薰衣草 */
-  --cream:           #FFF5E1;    /* 奶油色 */
+  /* 功能色 */
+  --checkin-color: #A0D8EF;     /* 签到 - 淡蓝 */
+  --tempout-color: #FFD6A5;     /* 临时离馆 - 暖橙 */
+  --checkout-color: #FFB3BA;    /* 签离 - 柔粉 */
 
-  /* ── 文字色 ── */
-  --text-primary:    #5D4E37;    /* 暖棕色主文字 */
-  --text-secondary:  #A89279;    /* 次要文字 */
-  --text-white:      #FFFFFF;
-  --text-accent:     #C4903A;    /* 强调色文字 */
+  /* 文字色 */
+  --text-main: #5A4A3A;         /* 主文字 - 暖棕 */
+  --text-sub: #9A8B7A;          /* 次要文字 */
+  --text-light: #FFF;           /* 亮色文字 */
 
-  /* ── 圆角（超大圆角体系） ── */
-  --radius-sm:       16px;
-  --radius-md:       24px;
-  --radius-lg:       32px;
-  --radius-xl:       40px;
-  --radius-full:     9999px;
+  /* 背景 */
+  --bg-page: linear-gradient(180deg, #FFF9E8 0%, #FFF0F5 40%, #E8F5F0 100%);
+  --bg-card: rgba(255, 255, 255, 0.72);
+  --bg-glass: rgba(255, 255, 255, 0.55);
 
-  /* ── 阴影（柔和奶油风） ── */
-  --shadow-sm:  0 4px 20px rgba(180, 160, 120, 0.08);
-  --shadow-md:  0 8px 32px rgba(180, 160, 120, 0.12);
-  --shadow-lg:  0 12px 48px rgba(180, 160, 120, 0.16);
+  /* 阴影 */
+  --shadow-soft: 0 8px 32px rgba(139, 119, 99, 0.12);
+  --shadow-hover: 0 12px 40px rgba(139, 119, 99, 0.18);
+  --shadow-inset: inset 0 2px 8px rgba(255, 255, 255, 0.8);
 
-  /* ── 毛玻璃 ── */
-  --glass-blur: blur(20px);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  /* 圆角 */
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
+  --radius-xl: 40px;
 
-  /* ── 动画 ── */
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-soft:   cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 字体 */
+  --font-cartoon: 'Nunito', 'Varela Round', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
-/* ── 全局重置 ── */
-*, *::before, *::after {
+/* ============================================================
+   基础重置
+   ============================================================ */
+* {
   margin: 0; padding: 0; box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+html, body {
+  font-family: var(--font-cartoon);
+  background: var(--bg-page);
+  background-attachment: fixed;
+  color: var(--text-main);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  position: relative;
 }
 
-/* ============================================
-   🌈 背景装饰层 · 漂浮的奶龙元素
-   ============================================ */
-.bg-decor {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(255,228,160,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(184,240,216,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,209,220,0.15) 0%, transparent 60%),
-    var(--bg-primary);
-}
-
-/* 漂浮云朵 */
+/* ============================================================
+   ☁️ 漂浮云朵装饰
+   ============================================================ */
 .cloud {
-  position: absolute;
-  background: rgba(255,255,255,0.7);
-  border-radius: var(--radius-full);
-  backdrop-filter: blur(6px);
-  animation: floatCloud linear infinite;
+  position: fixed;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50px;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(1px);
 }
 .cloud::before, .cloud::after {
   content: '';
   position: absolute;
-  background: inherit;
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 50%;
 }
-.cloud-1 { width: 120px; height: 36px; top: 8%; left: -10%; animation-duration: 35s; }
-.cloud-1::before { width: 50px; height: 50px; top: -25px; left: 20px; }
-.cloud-1::after  { width: 36px; height: 36px; top: -15px; left: 55px; }
-.cloud-2 { width: 90px; height: 28px; top: 25%; left: -15%; animation-duration: 42s; animation-delay: -10s; opacity: 0.5; }
-.cloud-2::before { width: 38px; height: 38px; top: -18px; left: 15px; }
-.cloud-2::after  { width: 28px; height: 28px; top: -10px; left: 42px; }
-.cloud-3 { width: 100px; height: 32px; top: 60%; left: -12%; animation-duration: 38s; animation-delay: -20s; opacity: 0.4; }
-.cloud-3::before { width: 44px; height: 44px; top: -22px; left: 18px; }
-.cloud-3::after  { width: 32px; height: 32px; top: -12px; left: 50px; }
+/* 云朵1 */
+.cloud-1 {
+  width: 80px; height: 30px;
+  top: 12%; left: -100px;
+  animation: floatCloud 25s linear infinite;
+}
+.cloud-1::before { width: 40px; height: 40px; top: -18px; left: 12px; }
+.cloud-1::after  { width: 35px; height: 35px; top: -12px; left: 38px; }
+/* 云朵2 */
+.cloud-2 {
+  width: 60px; height: 24px;
+  top: 28%; left: -80px;
+  animation: floatCloud 32s linear infinite;
+  animation-delay: -8s;
+}
+.cloud-2::before { width: 32px; height: 32px; top: -14px; left: 10px; }
+.cloud-2::after  { width: 28px; height: 28px; top: -10px; left: 30px; }
+/* 云朵3 */
+.cloud-3 {
+  width: 100px; height: 36px;
+  top: 55%; left: -120px;
+  animation: floatCloud 28s linear infinite;
+  animation-delay: -15s;
+}
+.cloud-3::before { width: 50px; height: 50px; top: -22px; left: 15px; }
+.cloud-3::after  { width: 42px; height: 42px; top: -16px; left: 48px; }
 @keyframes floatCloud {
-  from { transform: translateX(0); }
-  to   { transform: translateX(calc(100vw + 200px)); }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(100vw + 200px)); }
 }
 
-/* 漂浮星星 */
-.sparkle {
-  position: absolute;
-  font-size: 18px;
-  opacity: 0.5;
-  animation: twinkle 3s ease-in-out infinite;
+/* ============================================================
+   🐉 迷你奶龙贴纸装饰（页面边角）
+   ============================================================ */
+.sticker {
+  position: fixed;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
-.sparkle-1 { top: 15%; right: 15%; animation-delay: 0s; }
-.sparkle-2 { top: 40%; right: 8%; animation-delay: 1s; font-size: 14px; }
-.sparkle-3 { top: 70%; right: 20%; animation-delay: 2s; font-size: 22px; }
-.sparkle-4 { top: 55%; left: 10%; animation-delay: 0.5s; font-size: 12px; }
-.sparkle-5 { top: 85%; left: 25%; animation-delay: 1.5s; font-size: 16px; }
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
-  50%      { opacity: 0.7; transform: scale(1.2) rotate(15deg); }
+.sticker img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.sticker-tr {
+  top: 80px; right: 8px;
+  width: 60px; height: 60px;
+  animation: gentleBounce 3s ease-in-out infinite;
+}
+.sticker-bl {
+  bottom: 60px; left: 8px;
+  width: 70px; height: 70px;
+  animation: gentleBounce 3.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+.sticker-br {
+  bottom: 100px; right: 8px;
+  width: 55px; height: 55px;
+  animation: gentleBounce 2.8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%      { transform: translateY(-10px) rotate(5deg); }
 }
 
-/* ============================================
-   📱 顶部导航栏
-   ============================================ */
-.nav-bar {
+/* ============================================================
+   📱 手机容器（电脑端居中）
+   ============================================================ */
+.phone-frame {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* ============================================================
+   🔝 顶部导航栏
+   ============================================================ */
+.top-nav {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 20;
+  background: linear-gradient(135deg, var(--cream-yellow) 0%, var(--peach) 100%);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 16px 20px 14px;
+  box-shadow: var(--shadow-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: var(--glass-border);
 }
-.nav-title {
+.nav-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
+  gap: 10px;
 }
-.nav-title .nailong-avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--milk-yellow), var(--sakura-pink));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 2px 8px rgba(255,204,92,0.3);
-  animation: avatarWobble 3s ease-in-out infinite;
-}
-@keyframes avatarWobble {
-  0%, 100% { transform: rotate(0deg); }
-  25%      { transform: rotate(5deg); }
-  75%      { transform: rotate(-5deg); }
-}
-.nav-time {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* 汉堡菜单按钮 */
 .menu-btn {
   width: 40px; height: 40px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
   border: none;
-  background: var(--bg-card-solid);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  transition: transform 0.2s var(--ease-bounce);
-}
-.menu-btn:active { transform: scale(0.9); }
-
-/* ============================================
-   📋 侧边菜单栏（从左侧滑出）
-   ============================================ */
-.sidebar-overlay {
-  position: fixed; inset: 0;
-  z-index: 50;
-  background: rgba(93, 78, 55, 0.3);
-  backdrop-filter: blur(4px);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s var(--ease-soft);
-}
-.sidebar-overlay.show { opacity: 1; visibility: visible; }
-
-.sidebar {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: 280px;
-  max-width: 80vw;
-  z-index: 51;
-  background: var(--bg-card-solid);
-  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
-  box-shadow: var(--shadow-lg);
-  transform: translateX(-100%);
-  transition: transform 0.35s var(--ease-bounce);
-  padding: 24px;
-  overflow-y: auto;
-}
-.sidebar.show { transform: translateX(0); }
-
-.sidebar-header {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 28px;
-}
-.sidebar-logo {
-  width: 52px; height: 52px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--milk-yellow), var(--mint-green));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-  box-shadow: 0 4px 12px rgba(255,228,160,0.4);
-}
-.sidebar-name { font-size: 16px; font-weight: 700; }
-.sidebar-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-
-.sidebar-menu { list-style: none; }
-.sidebar-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.2s var(--ease-soft);
-  margin-bottom: 4px;
-}
-.sidebar-item:hover, .sidebar-item:active {
-  background: var(--bg-secondary);
-  transform: translateX(4px);
-}
-.sidebar-item .item-icon { font-size: 20px; }
-.sidebar-item .item-badge {
-  margin-left: auto;
-  background: var(--sakura-pink);
-  color: var(--sakura-deep);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-}
-
-.sidebar-footer {
-  position: absolute;
-  bottom: 24px; left: 24px; right: 24px;
-  padding: 16px;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.sidebar-footer .version { font-weight: 700; color: var(--text-accent); }
-
-/* ============================================
-   📄 主内容区
-   ============================================ */
-.page-content {
-  position: relative;
-  z-index: 1;
-  padding: 16px 16px 160px;
-}
-
-/* ── 欢迎区域（奶龙形象 + 问候语） ── */
-.welcome-section {
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 28px 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
-  background-image: url('background.png');
-  background-size: 100% auto;
-  background-position: center top;
-  background-repeat: no-repeat;
-}
-/* 欢迎区文字遮罩 - 让文字在图片上可读 */
-.welcome-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    rgba(255,253,247,0.55) 0%,
-    rgba(255,253,247,0.85) 60%,
-    rgba(255,253,247,0.95) 100%);
-  border-radius: inherit;
-}
-.welcome-content { position: relative; z-index: 1; }
-.welcome-emoji { font-size: 48px; margin-bottom: 8px; display: block; animation: bounce 2s var(--ease-bounce) infinite; }
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
-.welcome-h1 {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.3;
-}
-.welcome-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-top: 6px;
-}
-/* 角落装饰 */
-.welcome-deco {
-  position: absolute;
-  z-index: 1;
-  font-size: 28px;
-  opacity: 0.6;
-}
-.welcome-deco.top-right    { top: 12px; right: 16px; }
-.welcome-deco.bottom-left { bottom: 12px; left: 16px; }
-
-/* ── 状态卡片 ── */
-.status-card {
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
-.status-icon {
-  width: 52px; height: 52px;
-  border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px;
-  flex-shrink: 0;
+.menu-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.9); }
+.nav-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: 0.5px;
 }
-.status-icon.connected {
-  background: linear-gradient(135deg, var(--mint-green), #D4F5E3);
-  box-shadow: 0 4px 12px rgba(125,206,160,0.3);
+.nav-time {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-sub);
+  background: rgba(255,255,255,0.5);
+  padding: 6px 12px;
+  border-radius: 12px;
 }
-.status-icon.disconnected {
-  background: linear-gradient(135deg, var(--sakura-pink), #FFE0E6);
-  box-shadow: 0 4px 12px rgba(255,158,181,0.3);
-}
-.status-info { flex: 1; }
-.status-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-.status-value { font-size: 16px; font-weight: 700; margin-top: 2px; }
-.status-value.ok { color: var(--mint-deep); }
-.status-value.err { color: var(--sakura-deep); }
-.status-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
 
-/* ── 网络错误提示 ── */
-.error-banner {
-  display: none;
-  background: linear-gradient(135deg, #FFF0F0, #FFF5F0);
-  border: 1.5px solid #FFD6D6;
-  border-radius: var(--radius-md);
-  padding: 16px 18px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #C0392B;
-  line-height: 1.6;
+/* ============================================================
+   📋 侧边菜单栏
+   ============================================================ */
+.side-menu {
+  position: fixed;
+  top: 0; left: 0;
+  width: 260px; height: 100vh;
+  background: linear-gradient(180deg, #FFF9E8 0%, #FFF0F5 100%);
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 8px 0 32px rgba(0,0,0,0.1);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  overflow: hidden;
 }
-.error-banner.show { display: flex; align-items: center; gap: 10px; }
-.error-banner .retry-btn {
+.side-menu.open { transform: translateX(0); }
+.menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.2);
+  z-index: 99;
+  display: none;
+  backdrop-filter: blur(4px);
+}
+.menu-overlay.show { display: block; }
+.menu-header {
+  padding: 28px 20px 20px;
+  background: linear-gradient(135deg, var(--cream-yellow), var(--peach));
+  text-align: center;
+}
+.menu-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 4px solid #FFF;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.menu-header h3 {
+  font-size: 18px; font-weight: 800;
+  color: var(--text-main);
+}
+.menu-header p {
+  font-size: 13px; color: var(--text-sub);
+  margin-top: 4px;
+}
+.menu-list {
+  padding: 12px;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.menu-item:hover { background: rgba(255,228,160,0.4); }
+.menu-item .icon { font-size: 22px; }
+.menu-badge {
   margin-left: auto;
   background: var(--sakura-pink);
-  color: var(--sakura-deep);
-  border: none;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  flex-shrink: 0;
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
 }
-.error-banner .retry-btn:active { transform: scale(0.95); }
 
-/* ============================================
-   🎯 操作按钮区 · 三个奶龙卡片
-   ============================================ */
-.section-header {
+/* ============================================================
+   🍰 内容区
+   ============================================================ */
+.content {
+  padding: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   🎴 状态信息卡片（磨砂玻璃）
+   ============================================================ */
+.status-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  border: 1px solid rgba(255,255,255,0.6);
+  position: relative;
+  overflow: hidden;
+}
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, var(--cream-yellow) 0%, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.status-label {
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.status-value {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--text-main);
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 14px;
-  padding: 0 4px;
 }
-.section-dot {
-  width: 8px; height: 8px;
+.status-dot {
+  width: 12px; height: 12px;
   border-radius: 50%;
-  background: var(--milk-yellow-deep);
+  background: #34C759;
+  box-shadow: 0 0 8px #34C759;
+  animation: pulseDot 2s ease-in-out infinite;
 }
-.section-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
+.status-dot.offline {
+  background: #FF9F0A;
+  box-shadow: 0 0 8px #FF9F0A;
 }
-.section-title-en {
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 500;
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.3); opacity: 0.7; }
+}
+.status-detail {
+  font-size: 14px;
+  color: var(--text-sub);
+  font-weight: 600;
 }
 
+/* ============================================================
+   🎯 快速操作三大功能卡片
+   核心：奶龙图片100%不透明，无遮罩，清晰可见
+   ============================================================ */
 .action-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 .action-card {
-  border-radius: var(--radius-lg);
-  padding: 20px 12px 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s var(--ease-bounce), box-shadow 0.2s;
   position: relative;
-  overflow: hidden;
-  min-height: 140px;
+  border-radius: var(--radius-md);
+  min-height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border: 2px solid transparent;
+  justify-content: flex-end;
+  padding: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s;
+  border: 3px solid rgba(255,255,255,0.5);
 }
-.action-card:active { transform: scale(0.94); }
-
-/* ── 奶龙背景图（底层） ── */
-.action-card::before {
-  content: '';
-  position: absolute;
-  inset: -10px;
-  background: url('background.png') no-repeat center / cover;
-  opacity: 0.35;
-  z-index: 0;
+/* hover 放大 */
+.action-card:hover {
+  transform: scale(1.04);
+  box-shadow: var(--shadow-hover);
+}
+.action-card:active {
+  transform: scale(0.97);
 }
 
-/* ── 马卡龙渐变叠加层（中层） ── */
-.action-card::after {
-  content: '';
+/* ----- 奶龙背景图（100%不透明，无遮罩） ----- */
+.action-card .card-bg-img {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%; /* 重点显示奶龙脸部 */
+  opacity: 1; /* ✅ 完全不透明 */
+  z-index: 0;
+  /* 无滤镜，无遮罩 */
 }
 
-/* ── 文字内容（顶层） ── */
+/* ----- 底部文字区域（带轻微渐变底条确保可读性） ----- */
+/* 注意：不是全卡片遮罩，只是底部一小条渐变 */
+.action-card .card-text-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 55%;
+  background: linear-gradient(to top,
+    rgba(255,255,255,0.95) 0%,
+    rgba(255,255,255,0.7) 40%,
+    transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ----- 文字内容（在底条之上） ----- */
 .action-card .card-content {
   position: relative;
   z-index: 2;
+  text-align: center;
+  width: 100%;
 }
 .action-card .card-icon {
   font-size: 32px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 .action-card .card-name {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 2px;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text-main);
+  text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+  letter-spacing: 1px;
 }
 .action-card .card-name-en {
-  font-size: 11px;
-  opacity: 0.85;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-top: 2px;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.9);
 }
 
-/* 三个按钮各自颜色 */
-.action-card.checkin {
-  background: var(--sky-blue);
-  border-color: rgba(184,228,240,0.6);
-}
-.action-card.checkin::after {
-  background: linear-gradient(135deg, rgba(184,228,240,0.65), rgba(176,224,230,0.65));
-}
-.action-card.checkin:hover { box-shadow: 0 6px 24px rgba(184,228,240,0.5); }
+/* ----- 卡片边框色彩 ----- */
+.action-card.checkin  { border-color: rgba(160,216,239,0.6); }
+.action-card.tempout  { border-color: rgba(255,214,165,0.6); }
+.action-card.checkout { border-color: rgba(255,179,186,0.6); }
 
-.action-card.tempout {
-  background: var(--milk-yellow);
-  border-color: rgba(255,228,160,0.6);
-}
-.action-card.tempout::after {
-  background: linear-gradient(135deg, rgba(255,228,160,0.65), rgba(255,204,92,0.65));
-}
-.action-card.tempout:hover { box-shadow: 0 6px 24px rgba(255,228,160,0.5); }
-
-.action-card.checkout {
-  background: var(--mint-green);
-  border-color: rgba(184,240,216,0.6);
-}
-.action-card.checkout::after {
-  background: linear-gradient(135deg, rgba(184,240,216,0.65), rgba(125,206,160,0.65));
-}
-.action-card.checkout:hover { box-shadow: 0 6px 24px rgba(184,240,216,0.5); }
-
-/* 按钮上的迷你奶龙装饰（hover 浮出） */
+/* ----- hover 弹出迷你奶龙表情 ----- */
 .action-card .mini-nailong {
   position: absolute;
+  width: 50px; height: 50px;
   z-index: 3;
-  font-size: 24px;
-  opacity: 0;
-  transition: all 0.3s var(--ease-bounce);
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.5);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
 }
-.action-card:hover .mini-nailong,
-.action-card:active .mini-nailong {
-  opacity: 1;
-  transform: translateY(-20px) scale(1.2);
-}
-.action-card .mini-nailong.pos-tl { top: 4px; left: 6px; }
-.action-card .mini-nailong.pos-br { bottom: 4px; right: 6px; }
+.action-card.checkin .mini-nailong  { top: 8px; right: 8px; }
+.action-card.tempout .mini-nailong  { top: 8px; left: 8px; }
+.action-card.checkout .mini-nailong { bottom: 55px; right: 12px; }
 
-/* ============================================
-   📊 历史记录
-   ============================================ */
-.history-section { margin-bottom: 24px; }
+.action-card:hover .mini-nailong {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(10deg);
+}
+
+/* ============================================================
+   📜 历史记录
+   ============================================================ */
+.history-section { margin-bottom: 20px; }
+.history-title {
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 8px 4px 12px;
+}
 .history-item {
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.15s var(--ease-soft);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255,255,255,0.5);
+  transition: transform 0.2s;
 }
-.history-item:active { transform: scale(0.98); }
+.history-item:hover { transform: translateX(4px); }
 .history-dot {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 10px; height: 10px;
+  border-radius: 50%; flex-shrink: 0;
 }
-.history-dot.in   { background: var(--sky-blue); }
-.history-dot.temp { background: var(--milk-yellow-deep); }
-.history-dot.out  { background: var(--mint-deep); }
+.history-dot.in  { background: #81D4FA; box-shadow: 0 0 6px #81D4FA; }
+.history-dot.out { background: #F48FB1; box-shadow: 0 0 6px #F48FB1; }
+.history-dot.temp { background: #FFCC80; box-shadow: 0 0 6px #FFCC80; }
 .history-info { flex: 1; }
-.history-action { font-size: 14px; font-weight: 700; }
-.history-time   { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-.history-badge {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  color: var(--mint-deep);
-  background: var(--mint-green);
+.history-action {
+  font-size: 15px; font-weight: 800;
+  color: var(--text-main);
+}
+.history-time {
+  font-size: 13px; color: var(--text-sub);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.history-status {
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--mint-green), var(--sky-blue));
+  color: #2E7D5A;
 }
 
-/* ============================================
-   🔔 加载动画（奶龙旋转）
-   ============================================ */
+/* ============================================================
+   🍥 加载动画（奶龙旋转）
+   ============================================================ */
 .loading-overlay {
   display: none;
-  position: fixed; inset: 0;
-  z-index: 40;
-  background: rgba(255,253,247,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(255, 249, 232, 0.92);
+  backdrop-filter: blur(8px);
   align-items: center; justify-content: center;
   flex-direction: column;
 }
 .loading-overlay.show { display: flex; }
-.loader-nailong {
-  font-size: 56px;
-  animation: nailongSpin 1s linear infinite;
+.nailong-loader {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: nailongSpin 1.2s ease-in-out infinite;
+  box-shadow: 0 8px 24px rgba(255, 179, 71, 0.3);
 }
 @keyframes nailongSpin {
-  from { transform: rotate(0deg) scale(1); }
-  50%  { transform: rotate(180deg) scale(1.15); }
-  to   { transform: rotate(360deg) scale(1); }
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
 }
 .loading-text {
   margin-top: 16px;
-  font-size: 15px;
-  color: var(--text-secondary);
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-sub);
 }
 
-/* ============================================
-   📋 结果弹窗（底部奶龙卡片）
-   ============================================ */
+/* ============================================================
+   🎉 结果弹窗（奶油风格）
+   ============================================================ */
 .result-overlay {
   display: none;
-  position: fixed; inset: 0;
-  z-index: 45;
-  background: rgba(93,78,55,0.3);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(90, 74, 58, 0.25);
   align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(6px);
 }
 .result-overlay.show { display: flex; }
 .result-sheet {
-  background: var(--bg-card-solid);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  padding: 16px 20px 40px;
+  background: linear-gradient(180deg, #FFFDF7 0%, #FFF9E8 100%);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 20px 36px;
   width: 100%;
-  max-width: 500px;
-  animation: sheetUp 0.4s var(--ease-bounce);
-  position: relative;
-  overflow: hidden;
+  max-width: 480px;
+  animation: slideUp 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.12);
 }
-@keyframes sheetUp {
+@keyframes slideUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
-/* 弹窗顶部奶龙装饰 */
-.result-sheet::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--milk-yellow), var(--mint-green), var(--sakura-pink));
-  border-radius: 0 0 var(--radius-full) var(--radius-full);
-}
-.sheet-handle {
+.result-indicator {
   width: 40px; height: 5px;
-  background: var(--milk-yellow);
-  border-radius: var(--radius-full);
-  margin: 8px auto 20px;
-  opacity: 0.6;
+  background: var(--cream-yellow);
+  border-radius: 3px;
+  margin: 0 auto 20px;
 }
-.sheet-icon { font-size: 48px; text-align: center; margin-bottom: 8px; }
-.sheet-title {
-  font-size: 20px;
-  font-weight: 700;
+.result-icon {
+  font-size: 52px;
   text-align: center;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
-.sheet-msg {
-  font-size: 14px;
-  color: var(--text-secondary);
+.result-title {
+  font-size: 22px; font-weight: 900;
+  text-align: center; color: var(--text-main);
+  margin-bottom: 8px;
+}
+.result-msg {
+  font-size: 15px; color: var(--text-sub);
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.6;
+  font-weight: 600;
 }
-.sheet-url {
-  background: var(--bg-secondary);
+.result-url {
+  background: rgba(255,255,255,0.8);
   border-radius: var(--radius-sm);
-  padding: 12px 16px;
+  padding: 14px 16px;
   margin-bottom: 16px;
-  font-size: 12px;
-  color: var(--text-accent);
-  font-family: 'Menlo', 'SF Mono', monospace;
   word-break: break-all;
-  border: 1.5px dashed var(--milk-yellow);
+  font-size: 13px;
+  color: #8B7355;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  border: 2px dashed var(--cream-yellow);
 }
-/* 奶龙风格按钮 */
-.btn-primary {
-  width: 100%; height: 52px;
-  background: linear-gradient(135deg, var(--milk-yellow), var(--milk-yellow-deep));
-  color: var(--text-primary);
+.btn-cream {
+  width: 100%; height: 54px;
+  background: linear-gradient(135deg, var(--cream-yellow), var(--peach));
+  color: var(--text-main);
   border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  font-weight: 700;
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 800;
   cursor: pointer;
   margin-bottom: 10px;
-  box-shadow: 0 4px 16px rgba(255,204,92,0.35);
-  transition: all 0.2s var(--ease-bounce);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255, 179, 71, 0.25);
+  font-family: var(--font-cartoon);
 }
-.btn-primary:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(255,204,92,0.2); }
-.btn-secondary {
-  width: 100%; height: 52px;
-  background: var(--bg-secondary);
-  color: var(--text-accent);
-  border: 2px solid var(--milk-yellow);
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  font-weight: 700;
+.btn-cream:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(255, 179, 71, 0.2);
+}
+.btn-cream-secondary {
+  width: 100%; height: 54px;
+  background: rgba(255,255,255,0.7);
+  color: var(--text-sub);
+  border: 2px solid var(--cream-yellow);
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s var(--ease-bounce);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  font-family: var(--font-cartoon);
 }
-.btn-secondary:active { transform: scale(0.96); }
+.btn-cream-secondary:active { transform: scale(0.96); background: var(--cream-yellow); color: var(--text-main); }
 
-/* ============================================
-   🍞 Toast 提示
-   ============================================ */
-.toast {
-  position: fixed;
-  bottom: 110px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--bg-card-solid);
-  color: var(--text-primary);
-  padding: 12px 24px;
-  border-radius: var(--radius-full);
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 200;
-  opacity: 0;
-  transition: all 0.3s var(--ease-bounce);
-  pointer-events: none;
-  white-space: nowrap;
-  box-shadow: var(--shadow-md);
-  border: var(--glass-border);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ============================================
-   📝 底部 Footer
-   ============================================ */
+/* ============================================================
+   🍞 底部版本提示
+   ============================================================ */
 .footer {
   text-align: center;
-  padding: 20px 16px 32px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  opacity: 0.7;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 600;
+  line-height: 1.6;
+}
+.footer .heart { color: #FF8A80; }
+
+/* ============================================================
+   🔔 Toast
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--cream-yellow), var(--peach));
+  color: var(--text-main);
+  padding: 14px 28px;
+  border-radius: var(--radius-xl);
+  font-size: 15px;
+  font-weight: 800;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-soft);
+}
+.toast.show { opacity: 1; }
+
+/* ============================================================
+   ⚠️ 错误提示
+   ============================================================ */
+.error-banner {
+  display: none;
+  background: linear-gradient(135deg, #FFE8E8, #FFF0F0);
+  border: 2px solid #FFB3BA;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #E57373;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.error-banner.show { display: block; }
+.error-banner .retry-btn {
+  color: #FF8A65;
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 4px;
+  text-decoration: underline;
 }
 
-/* ============================================
-   🖥️ 电脑端适配（>768px 居中显示手机宽度）
-   ============================================ */
+/* ============================================================
+   💻 电脑端适配
+   ============================================================ */
 @media (min-width: 768px) {
-  .page-content {
-    max-width: 480px;
-    margin: 0 auto;
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
   }
-  .nav-bar {
-    max-width: 480px;
-    margin: 0 auto;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  .phone-frame {
+    width: 100%;
+    max-width: 440px;
+    min-height: auto;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 60px rgba(139, 119, 99, 0.2);
+    overflow: hidden;
+    background: var(--bg-page);
   }
-  .action-grid { gap: 16px; }
-  .action-card { min-height: 160px; }
-  .toast { bottom: 40px; }
 }
-
-/* ============================================
-   🎨 滚动条美化
-   ============================================ */
-::-webkit-scrollbar { width: 0; height: 0; }
 </style>
 </head>
 <body>
 
-<!-- ========== 背景装饰层 ========== -->
-<div class="bg-decor">
-  <div class="cloud cloud-1"></div>
-  <div class="cloud cloud-2"></div>
-  <div class="cloud cloud-3"></div>
-  <div class="sparkle sparkle-1">✨</div>
-  <div class="sparkle sparkle-2">⭐</div>
-  <div class="sparkle sparkle-3">✨</div>
-  <div class="sparkle sparkle-4">🌟</div>
-  <div class="sparkle sparkle-5">⭐</div>
+<!-- ===== ☁️ 漂浮云朵 ===== -->
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+
+<!-- ===== 🐉 迷你奶龙贴纸（页面边角） ===== -->
+<div class="sticker sticker-tr">
+  <img src="nailong3.png" alt="奶龙">
+</div>
+<div class="sticker sticker-bl">
+  <img src="nailong5.png" alt="奶龙">
+</div>
+<div class="sticker sticker-br">
+  <img src="nailong6.png" alt="奶龙">
 </div>
 
-<!-- ========== 侧边菜单栏 ========== -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">🐉</div>
-    <div>
-      <div class="sidebar-name">奶龙签到助手</div>
-      <div class="sidebar-desc">SDUFE Library</div>
+<!-- ===== 📱 手机框架 ===== -->
+<div class="phone-frame">
+
+  <!-- ===== 🔝 顶部导航栏 ===== -->
+  <nav class="top-nav">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <span class="nav-title">🐉 奶龙签到</span>
     </div>
-  </div>
-  <ul class="sidebar-menu">
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">🏠</span> 首页
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">📍</span> 签到入馆
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">🚶</span> 临时离馆
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">🚪</span> 签离出馆
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">📋</span> 今日记录
-      <span class="item-badge" id="menuBadge" style="display:none;">0</span>
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">⚙️</span> 设置
-    </li>
-    <li class="sidebar-item" onclick="closeSidebar()">
-      <span class="item-icon">❓</span> 帮助
-    </li>
-  </ul>
-  <div class="sidebar-footer">
-    🐉 奶龙签到助手 <span class="version">v2.1</span><br>
-    SDUFE Library Remote Check-in
-  </div>
+    <span class="nav-time" id="navTime">9:41</span>
+  </nav>
+
+  <!-- ===== 📋 侧边菜单栏 ===== -->
+  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+  <aside class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <img src="nailong3.png" class="menu-avatar" alt="奶龙头像">
+      <h3>奶龙图书馆</h3>
+      <p>SDUFE Library Check-in</p>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item" onclick="toggleMenu(); showToast('已刷新状态')">
+        <span class="icon">🔄</span>
+        <span>刷新状态</span>
+      </div>
+      <div class="menu-item" onclick="toggleMenu(); document.getElementById('historySection').scrollIntoView({behavior:'smooth'})">
+        <span class="icon">📜</span>
+        <span>今日记录</span>
+        <span class="menu-badge" id="menuBadge" style="display:none">0</span>
+      </div>
+      <div class="menu-item" onclick="toggleMenu(); showToast('v2.2 奶龙主题版')">
+        <span class="icon">ℹ️</span>
+        <span>关于</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== 🍰 内容区 ===== -->
+  <main class="content">
+
+    <!-- 错误提示 -->
+    <div class="error-banner" id="errorBanner">
+      <span id="errorText">网络错误，请连接校园网 SDUFE WiFi</span>
+      <span class="retry-btn" onclick="retryTimestamp()">重试</span>
+    </div>
+
+    <!-- ===== 🎴 状态信息卡片 ===== -->
+    <div class="status-card">
+      <div class="status-label">📡 当前状态</div>
+      <div class="status-value">
+        <span class="status-dot offline" id="statusDot"></span>
+        <span id="statusValue">未连接</span>
+      </div>
+      <div class="status-detail" id="statusDetail">请连接校园网后自动获取状态</div>
+    </div>
+
+    <!-- ===== 🎯 快速操作三大功能卡片 ===== -->
+    <div class="action-grid">
+      <!-- 签到入馆 -->
+      <div class="action-card checkin" onclick="doAction('1')">
+        <!-- 奶龙背景图：100%不透明，无遮罩 -->
+        <img src="nailong3.png" class="card-bg-img" alt="签到奶龙">
+        <!-- 底部渐变文字底条（仅底部，非全卡片遮罩） -->
+        <div class="card-text-bar"></div>
+        <!-- hover 弹出迷你奶龙 -->
+        <img src="nailong1.png" class="mini-nailong" alt="迷你奶龙">
+        <div class="card-content">
+          <div class="card-icon">📍</div>
+          <div class="card-name">签到入馆</div>
+          <div class="card-name-en">Check In</div>
+        </div>
+      </div>
+
+      <!-- 临时离馆 -->
+      <div class="action-card tempout" onclick="doAction('2')">
+        <img src="nailong2.png" class="card-bg-img" alt="暂离奶龙">
+        <div class="card-text-bar"></div>
+        <img src="nailong4.png" class="mini-nailong" alt="迷你奶龙">
+        <div class="card-content">
+          <div class="card-icon">🚶</div>
+          <div class="card-name">临时离馆</div>
+          <div class="card-name-en">Temp Out</div>
+        </div>
+      </div>
+
+      <!-- 签离出馆 -->
+      <div class="action-card checkout" onclick="doAction('3')">
+        <img src="nailong4.png" class="card-bg-img" alt="签离奶龙">
+        <div class="card-text-bar"></div>
+        <img src="nailong5.png" class="mini-nailong" alt="迷你奶龙">
+        <div class="card-content">
+          <div class="card-icon">🚪</div>
+          <div class="card-name">签离出馆</div>
+          <div class="card-name-en">Check Out</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 📜 历史记录 ===== -->
+    <div class="history-section" id="historySection" style="display:none;">
+      <div class="history-title">📜 今日记录 · TODAY</div>
+      <div id="historyList"></div>
+    </div>
+
+    <!-- ===== 🍞 底部版本提示 ===== -->
+    <div class="footer">
+      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.2<br>
+      奶龙奶油卡通风 · 请连接校园网使用
+    </div>
+
+  </main>
 </div>
 
-<!-- ========== 顶部导航栏 ========== -->
-<nav class="nav-bar">
-  <button class="menu-btn" onclick="openSidebar()">☰</button>
-  <div class="nav-title">
-    <div class="nailong-avatar">🐉</div>
-    <span>奶龙签到</span>
-  </div>
-  <span class="nav-time" id="navTime">9:41</span>
-</nav>
-
-<!-- ========== 主内容区 ========== -->
-<main class="page-content">
-
-  <!-- 欢迎区域 -->
-  <section class="welcome-section">
-    <span class="welcome-deco top-right">☁️</span>
-    <span class="welcome-deco bottom-left">🌟</span>
-    <div class="welcome-content">
-      <span class="welcome-emoji">🐉</span>
-      <h1 class="welcome-h1">图书馆签到</h1>
-      <p class="welcome-sub">SDUFE Library · 远程签到系统</p>
-    </div>
-  </section>
-
-  <!-- 状态卡片 -->
-  <div class="status-card" id="statusCard">
-    <div class="status-icon disconnected" id="statusIcon">⚡</div>
-    <div class="status-info">
-      <div class="status-label">当前状态</div>
-      <div class="status-value" id="statusValue">未连接</div>
-      <div class="status-detail" id="statusDetail">连接校园网后自动获取</div>
-    </div>
-  </div>
-
-  <!-- 网络错误提示 -->
-  <div class="error-banner" id="errorBanner">
-    <span>⚠️</span>
-    <span id="errorText">网络错误，无法连接服务器</span>
-    <button class="retry-btn" onclick="retryTimestamp()">重试 🔄</button>
-  </div>
-
-  <!-- 快速操作 -->
-  <div class="section-header">
-    <div class="section-dot"></div>
-    <span class="section-title">快速操作</span>
-    <span class="section-title-en">QUICK ACTION</span>
-  </div>
-
-  <div class="action-grid">
-    <div class="action-card checkin" onclick="doAction('1')">
-      <span class="mini-nailong pos-tl">🐉</span>
-      <span class="mini-nailong pos-br">💛</span>
-      <div class="card-content">
-        <div class="card-icon">📍</div>
-        <div class="card-name">签到入馆</div>
-        <div class="card-name-en">Check In</div>
-      </div>
-    </div>
-    <div class="action-card tempout" onclick="doAction('2')">
-      <span class="mini-nailong pos-tl">🐉</span>
-      <span class="mini-nailong pos-br">💛</span>
-      <div class="card-content">
-        <div class="card-icon">🚶</div>
-        <div class="card-name">临时离馆</div>
-        <div class="card-name-en">Temp Out</div>
-      </div>
-    </div>
-    <div class="action-card checkout" onclick="doAction('3')">
-      <span class="mini-nailong pos-tl">🐉</span>
-      <span class="mini-nailong pos-br">💚</span>
-      <div class="card-content">
-        <div class="card-icon">🚪</div>
-        <div class="card-name">签离出馆</div>
-        <div class="card-name-en">Check Out</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 历史记录 -->
-  <section class="history-section" id="historySection" style="display:none;">
-    <div class="section-header">
-      <div class="section-dot" style="background: var(--mint-deep);"></div>
-      <span class="section-title">今日记录</span>
-      <span class="section-title-en">TODAY</span>
-    </div>
-    <div id="historyList"></div>
-  </section>
-
-  <div class="footer">
-    🐉 奶龙签到助手 v2.1<br>
-    请连接校园网 SDUFE WiFi 后使用
-  </div>
-</main>
-
-<!-- ========== 加载弹窗 ========== -->
+<!-- ===== 🍥 加载动画 ===== -->
 <div class="loading-overlay" id="loading">
-  <div class="loader-nailong">🐉</div>
-  <div class="loading-text">奶龙正在获取时间戳...</div>
+  <img src="nailong3.png" class="nailong-loader" alt="奶龙加载中">
+  <div class="loading-text">奶龙正在获取时间...</div>
 </div>
 
-<!-- ========== 结果弹窗 ========== -->
+<!-- ===== 🎉 结果弹窗 ===== -->
 <div class="result-overlay" id="resultOverlay" onclick="if(event.target===this)closeResult()">
   <div class="result-sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-icon" id="resultIcon">✅</div>
-    <div class="sheet-title" id="resultTitle">操作成功</div>
-    <div class="sheet-msg" id="resultMsg">请点击下方按钮完成签到</div>
-    <div class="sheet-url" id="resultUrl" style="display:none;"></div>
-    <button class="btn-primary" onclick="goToLibrary()">
-      📱 跳转到图书馆
-    </button>
-    <button class="btn-secondary" onclick="copyLink()">
-      📋 复制链接
-    </button>
+    <div class="result-indicator"></div>
+    <div class="result-icon" id="resultIcon">✅</div>
+    <div class="result-title" id="resultTitle">操作成功</div>
+    <div class="result-msg" id="resultMsg">请点击下方按钮跳转到图书馆</div>
+    <div class="result-url" id="resultUrl" style="display:none;"></div>
+    <button class="btn-cream" id="resultBtn" onclick="goToLibrary()">📱 跳转到图书馆</button>
+    <button class="btn-cream-secondary" onclick="copyLink()" id="copyBtn">📋 复制链接</button>
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ===== 🔔 Toast ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ============================================
-     ⚙️ JavaScript 逻辑
-     ============================================ -->
 <script>
+// ============================================================
+// 🎨 奶龙签到系统 · 原生 JS
+// ============================================================
+
 // ===== 时间更新 =====
 function updateTime() {
   const now = new Date();
-  const h = now.getHours(), m = now.getMinutes();
+  let h = now.getHours(), m = now.getMinutes();
   document.getElementById('navTime').textContent =
     h + ':' + (m < 10 ? '0' : '') + m;
 }
 updateTime();
 setInterval(updateTime, 30000);
 
-// ===== 侧边菜单 =====
-function openSidebar() {
-  document.getElementById('sidebar').classList.add('show');
-  document.getElementById('sidebarOverlay').classList.add('show');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('show');
-  document.getElementById('sidebarOverlay').classList.remove('show');
+// ===== 菜单切换 =====
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('show');
 }
 
-// ===== 状态检测 =====
+// ===== 状态更新 =====
 function updateStatus() {
   fetch('https://libst.sdufe.edu.cn/api.php/v3qrtime', {
     mode: 'cors', cache: 'no-cache'
   }).then(r => r.json()).then(d => {
     if (d && d.status === 1) {
       document.getElementById('errorBanner').classList.remove('show');
-      document.getElementById('statusIcon').className = 'status-icon connected';
-      document.getElementById('statusIcon').textContent = '✅';
       document.getElementById('statusValue').textContent = '已连接';
-      document.getElementById('statusValue').className = 'status-value ok';
-      document.getElementById('statusDetail').textContent = 'API 正常 · 时间戳: ' + d.data;
+      document.getElementById('statusDot').classList.remove('offline');
+      document.getElementById('statusDetail').textContent = 'API正常 · 时间戳 ' + d.data;
     }
   }).catch(() => {
     document.getElementById('errorBanner').classList.add('show');
-    document.getElementById('statusIcon').className = 'status-icon disconnected';
-    document.getElementById('statusIcon').textContent = '⚠️';
     document.getElementById('statusValue').textContent = '未连接';
-    document.getElementById('statusValue').className = 'status-value err';
-    document.getElementById('statusDetail').textContent = '请确认已连接校园网';
+    document.getElementById('statusDot').classList.add('offline');
+    document.getElementById('statusDetail').textContent = '请连接校园网 SDUFE WiFi';
   });
 }
 setTimeout(updateStatus, 500);
@@ -993,37 +935,37 @@ let currentUrl = '';
 
 function doAction(type) {
   const names = { '1': '签到入馆', '2': '临时离馆', '3': '签离出馆' };
-  const emojis = { '1': '📍', '2': '🚶', '3': '🚪' };
 
   document.getElementById('loading').classList.add('show');
 
-  fetch('https://libst.sdufe.edu.cn/api.php/v3qrtime', {
-    mode: 'cors', cache: 'no-cache'
-  }).then(r => r.json()).then(d => {
-    document.getElementById('loading').classList.remove('show');
-    if (!d || d.status !== 1) {
-      showToast('获取时间戳失败，请确认已连接校园网');
-      return;
-    }
-    const ts = d.data;
-    const url = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
-    currentUrl = url;
+  fetch('https://libst.sdufe.edu.cn/api.php/v3qrtime', { mode: 'cors', cache: 'no-cache' })
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('loading').classList.remove('show');
+      if (!d || d.status !== 1) {
+        showToast('获取时间戳失败，请确认已连接校园网');
+        return;
+      }
+      const ts = d.data;
+      const url = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
+      currentUrl = url;
 
-    addHistory(type, ts);
+      addHistory(type, ts);
 
-    document.getElementById('resultIcon').textContent = emojis[type] + ' ✅';
-    document.getElementById('resultTitle').textContent = names[type] + ' 就绪';
-    document.getElementById('resultMsg').textContent =
-      '时间戳: ' + ts + '\n请在微信中打开链接以完成' + names[type];
-    document.getElementById('resultUrl').style.display = 'block';
-    document.getElementById('resultUrl').textContent = url;
-    document.getElementById('resultOverlay').classList.add('show');
-  }).catch(() => {
-    document.getElementById('loading').classList.remove('show');
-    document.getElementById('errorBanner').classList.add('show');
-    document.getElementById('errorText').textContent =
-      '网络错误：无法连接图书馆服务器，请确认已连接 SDUFE 校园网';
-  });
+      document.getElementById('resultIcon').textContent = '✅';
+      document.getElementById('resultTitle').textContent = names[type] + ' 就绪';
+      document.getElementById('resultMsg').textContent =
+        '时间戳: ' + ts + '\n请在微信中打开链接完成' + names[type];
+      document.getElementById('resultUrl').style.display = 'block';
+      document.getElementById('resultUrl').textContent = url;
+      document.getElementById('resultOverlay').classList.add('show');
+    })
+    .catch(() => {
+      document.getElementById('loading').classList.remove('show');
+      document.getElementById('errorBanner').classList.add('show');
+      document.getElementById('errorText').textContent =
+        '网络错误：无法连接图书馆服务器，请确认已连接 SDUFE 校园网';
+    });
 }
 
 function goToLibrary() {
@@ -1034,7 +976,7 @@ function goToLibrary() {
 function copyLink() {
   if (!currentUrl) { showToast('链接为空'); return; }
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(currentUrl).then(() => showToast('🐉 链接已复制'));
+    navigator.clipboard.writeText(currentUrl).then(() => showToast('链接已复制'));
   } else {
     const ta = document.createElement('textarea');
     ta.value = currentUrl;
@@ -1042,7 +984,7 @@ function copyLink() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('🐉 链接已复制');
+    showToast('链接已复制');
   }
 }
 
@@ -1051,22 +993,16 @@ function closeResult() {
 }
 
 // ===== 历史记录 =====
-let historyCount = 0;
-
 function addHistory(type, ts) {
   const names = { '1': '签到入馆', '2': '临时离馆', '3': '签离出馆' };
-  const dots  = { '1': 'in', '2': 'temp', '3': 'out' };
-  const bgColors = { '1': 'var(--sky-blue)', '2': 'var(--milk-yellow)', '3': 'var(--mint-green)' };
+  const dots = { '1': 'in', '2': 'temp', '3': 'out' };
 
-  document.getElementById('historySection').style.display = 'block';
+  const section = document.getElementById('historySection');
+  section.style.display = 'block';
+
   const list = document.getElementById('historyList');
   const now = new Date();
   const timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-
-  historyCount++;
-  const badge = document.getElementById('menuBadge');
-  badge.textContent = historyCount;
-  badge.style.display = 'inline';
 
   const item = document.createElement('div');
   item.className = 'history-item';
@@ -1076,8 +1012,13 @@ function addHistory(type, ts) {
       '<div class="history-action">' + names[type] + '</div>' +
       '<div class="history-time">' + timeStr + ' · 时间戳 ' + ts + '</div>' +
     '</div>' +
-    '<div class="history-badge">✓ 就绪</div>';
+    '<div class="history-status">✓ 就绪</div>';
   list.insertBefore(item, list.firstChild);
+
+  // 更新菜单badge
+  const badge = document.getElementById('menuBadge');
+  badge.textContent = list.children.length;
+  badge.style.display = 'inline-block';
 }
 
 // ===== Toast =====
@@ -1088,7 +1029,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ===== 点击遮罩关闭弹窗 =====
+// ===== 点击弹窗遮罩关闭 =====
 document.getElementById('resultOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeResult();
 });
