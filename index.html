@@ -17,6 +17,17 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* 背景图 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: url('background.png') no-repeat center center / cover;
+    opacity: 0.12;
+    pointer-events: none;
+  }
   
   /* 状态栏 */
   .status-bar {
@@ -47,66 +58,19 @@
     margin-top: 4px;
   }
   
-  /* 密码遮罩 */
-  .password-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.4);
-    display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  .password-card {
-    background: #FFF;
-    border-radius: 14px;
-    padding: 32px 28px;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-  }
-  .password-card h2 {
-    font-size: 22px; font-weight: 700;
-    margin-bottom: 8px; color: #000;
-  }
-  .password-card p {
-    font-size: 15px; color: #8E8E93;
-    margin-bottom: 24px;
-  }
-  .password-card input {
-    width: 100%; height: 50px;
-    border: 1.5px solid #E5E5EA;
-    border-radius: 12px;
-    padding: 0 16px;
-    font-size: 20px; letter-spacing: 8px;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.2s;
-    font-family: 'SF Mono', 'Menlo', monospace;
-  }
-  .password-card input:focus {
-    border-color: #007AFF;
-  }
-  .password-card .error {
-    color: #FF3B30; font-size: 13px;
-    margin-top: 12px; min-height: 18px;
-  }
-  .password-card button {
-    margin-top: 20px;
-    width: 100%; height: 50px;
-    background: #007AFF;
-    color: #FFF; border: none;
-    border-radius: 12px;
-    font-size: 17px; font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .password-card button:active { opacity: 0.7; }
   
   /* 内容区 */
   .content {
     padding: 16px 16px 140px;
-    display: none;
+    position: relative;
   }
-  .content.show { display: block; }
+  /* 确保卡片在背景图上有足够对比度 */
+  .status-card,
+  .action-card,
+  .history-item,
+  .result-sheet {
+    position: relative;
+  }
   
   /* 状态卡片 - 蓝色渐变 */
   .status-card {
@@ -373,19 +337,6 @@
 </head>
 <body>
 
-<!-- 密码输入遮罩 -->
-<div class="password-overlay" id="pwdOverlay">
-  <div class="password-card">
-    <h2>🔒 访问控制</h2>
-    <p>请输入访问密码</p>
-    <input type="password" id="pwdInput" maxlength="10" placeholder="··········"
-           autocomplete="off" inputmode="numeric">
-    <div class="error" id="pwdError"></div>
-    <button onclick="checkPassword()">解 锁</button>
-    <div style="font-size:11px;color:#C7C7CC;margin-top:16px;">SDUFE Library Remote Check-in</div>
-  </div>
-</div>
-
 <!-- 主内容 -->
 <div class="content" id="mainContent">
   <!-- 状态栏 -->
@@ -472,26 +423,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 密码校验 =====
-// 前端密码本就可查看源码，无需混淆，直接明文比对
-const CORRECT_PWD = 'zhtzht8888';
-
-function checkPassword(){
-  const input = document.getElementById('pwdInput').value;
-  if(input !== CORRECT_PWD){
-    document.getElementById('pwdError').textContent = '密码错误，请重试';
-    document.getElementById('pwdInput').value = '';
-    return;
-  }
-  document.getElementById('pwdOverlay').style.display = 'none';
-  document.getElementById('mainContent').classList.add('show');
-  updateStatus();
-}
-
-document.getElementById('pwdInput').addEventListener('keydown', e=>{
-  if(e.key==='Enter') checkPassword();
-});
-
 // ===== 时间 =====
 function updateTime(){
   const now = new Date();
