@@ -1236,9 +1236,9 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   animation: achShineSweep 0.55s 0.12s var(--ease-smooth) forwards;
 }
 @keyframes achShineSweep {
-  0%   { left: -50%; opacity: 0; }
+  0%   { transform: translateX(-100%); opacity: 0; }
   15%  { opacity: 1; }
-  100% { left: 150%; opacity: 0; }
+  100% { transform: translateX(300%); opacity: 0; }
 }
 
 /* 解锁后持续彩色光晕呼吸 —— 三色渐变循环 */
@@ -1545,13 +1545,13 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🐉 迷你奶龙贴纸（页面边角） ===== -->
 <div class="sticker sticker-tr">
-  <img src="nailong3.png" alt="奶龙">
+  <img loading="lazy" src="nailong3.png" alt="奶龙">
 </div>
 <div class="sticker sticker-bl">
-  <img src="nailong5.png" alt="奶龙">
+  <img loading="lazy" src="nailong5.png" alt="奶龙">
 </div>
 <div class="sticker sticker-br">
-  <img src="nailong6.png" alt="奶龙">
+  <img loading="lazy" src="nailong6.png" alt="奶龙">
 </div>
 
 <!-- ===== 📱 手机框架 ===== -->
@@ -1570,7 +1570,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
   <aside class="side-menu" id="sideMenu">
     <div class="menu-header">
-      <img src="nailong3.png" class="menu-avatar" alt="奶龙头像">
+      <img loading="lazy" src="nailong3.png" class="menu-avatar" alt="奶龙头像">
       <h3>奶龙图书馆</h3>
       <p>SDUFE Library Check-in</p>
     </div>
@@ -1598,7 +1598,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     <div class="error-banner" id="errorBanner">
       <span id="errorText">网络错误，请连接校园网 SDUFE WiFi</span>
       <span class="retry-btn" onclick="retryTimestamp()">重试</span>
-      <img src="nailong-surprise.png" class="error-nailong" alt="惊讶奶龙">
+      <img loading="lazy" src="nailong-surprise.png" class="error-nailong" alt="惊讶奶龙">
     </div>
 
     <!-- ===== 🎴 状态信息卡片 ===== -->
@@ -1634,11 +1634,11 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
       <!-- 签到入馆 -->
       <div class="action-card checkin" onclick="doAction('1')">
         <!-- 奶龙背景图：100%不透明，无遮罩 -->
-        <img src="nailong3.png" class="card-bg-img" alt="签到奶龙">
+        <img loading="lazy" src="nailong3.png" class="card-bg-img" alt="签到奶龙">
         <!-- 底部渐变文字底条（仅底部，非全卡片遮罩） -->
         <div class="card-text-bar"></div>
         <!-- hover 弹出迷你奶龙 -->
-        <img src="nailong1.png" class="mini-nailong" alt="迷你奶龙">
+        <img loading="lazy" src="nailong1.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">📍</div>
           <div class="card-name">签到入馆</div>
@@ -1648,9 +1648,9 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
       <!-- 临时离馆 -->
       <div class="action-card tempout" onclick="doAction('2')">
-        <img src="nailong2.png" class="card-bg-img" alt="暂离奶龙">
+        <img loading="lazy" src="nailong2.png" class="card-bg-img" alt="暂离奶龙">
         <div class="card-text-bar"></div>
-        <img src="nailong4.png" class="mini-nailong" alt="迷你奶龙">
+        <img loading="lazy" src="nailong4.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">🚶</div>
           <div class="card-name">临时离馆</div>
@@ -1660,9 +1660,9 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
       <!-- 签离出馆 -->
       <div class="action-card checkout" onclick="doAction('3')">
-        <img src="nailong4.png" class="card-bg-img" alt="签离奶龙">
+        <img loading="lazy" src="nailong4.png" class="card-bg-img" alt="签离奶龙">
         <div class="card-text-bar"></div>
-        <img src="nailong5.png" class="mini-nailong" alt="迷你奶龙">
+        <img loading="lazy" src="nailong5.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">🚪</div>
           <div class="card-name">签离出馆</div>
@@ -1685,12 +1685,12 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
     <!-- ===== 🦵 彩蛋奶龙 ===== -->
     <div class="footer-nailong">
-      <img src="nailong-longleg.jpg" alt="长腿奶龙">
+      <img loading="lazy" src="nailong-longleg.jpg" alt="长腿奶龙">
     </div>
 
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
-      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.9<br>
+      <span class="heart">❤</span> SDUFE Library Remote Check-in v3.0<br>
       奶龙奶油卡通风 · 请连接校园网使用
     </div>
 
@@ -1699,7 +1699,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🍥 加载动画 ===== -->
 <div class="loading-overlay" id="loading">
-  <img src="nailong-sleep.png" class="nailong-loader" alt="奶龙加载中">
+  <img loading="lazy" src="nailong-sleep.png" class="nailong-loader" alt="奶龙加载中">
   <div class="loading-text">奶龙正在获取时间...💤</div>
 </div>
 
@@ -1727,7 +1727,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🥚 长按彩蛋 ===== -->
 <div class="easter-egg-overlay" id="easterEgg" onclick="this.classList.remove('show')">
-  <img src="nailong3.png" class="easter-egg-img" alt="彩蛋奶龙">
+  <img loading="lazy" src="nailong3.png" class="easter-egg-img" alt="彩蛋奶龙">
   <div class="easter-egg-text" id="eggText">你发现了奶龙的秘密！</div>
   <div class="easter-egg-sub">点击任意处关闭</div>
 </div>
@@ -1739,7 +1739,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 <div class="confetti-container" id="confettiBox"></div>
 
 <!-- ===== 🐉 滚动跟随浮动奶龙 ===== -->
-<img src="nailong1.png" class="scroll-nailong" id="scrollNailong" alt="浮动奶龙">
+<img loading="lazy" src="nailong1.png" class="scroll-nailong" id="scrollNailong" alt="浮动奶龙">
 
 <!-- ===== 🍃 季节飘落装饰容器 ===== -->
 <div id="seasonBox"></div>
@@ -1929,7 +1929,7 @@ function showAbout() {
       <div class="about-card">
         <button class="about-close" onclick="closeAbout()">✕</button>
         <div class="about-header">
-          <img src="nailong3.png" class="about-avatar" alt="奶龙">
+          <img loading="lazy" src="nailong3.png" class="about-avatar" alt="奶龙">
           <h2>奶龙图书馆签到</h2>
           <p>SDUFE Library Remote Check-in</p>
           <span class="about-version">v2.8 微交互升级版</span>
@@ -2344,7 +2344,8 @@ function resetIdleTimer() {
   }, 30000);
 }
 ['click','touchstart','scroll','keydown'].forEach(e => document.addEventListener(e, resetIdleTimer, {passive:true}));
-resetIdleTimer();
+// 延迟启动闲置计时器，避免首屏加载干扰
+setTimeout(resetIdleTimer, 2000);
 const NAILONG_QUOTES = [
   '今天也是适合签到的一天（被迫营业版）',
   '你为什么还没签到？奶龙已经在墙上抠出一个人形了',
@@ -2399,7 +2400,8 @@ function createSeasonParticles() {
     box.appendChild(el);
   }
 }
-createSeasonParticles();
+// 延迟加载非首屏资源
+setTimeout(createSeasonParticles, 1500);
 
 // ===== 💧 水波纹（Ripple）效果 =====
 function createRipple(e, el) {
