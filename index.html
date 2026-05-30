@@ -921,235 +921,6 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 }
 .btn-cream-secondary:active { transform: scale(0.96) translateY(1px); background: var(--cream-yellow); color: var(--text-main); }
 
-/* ===== ℹ️ 关于弹窗样式 ===== */
-.about-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(0,0,0,0.35);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.about-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-elevated);
-  border: 1px solid rgba(255,255,255,0.6);
-  width: 100%;
-  max-width: 420px;
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative;
-  animation: aboutSlideUp 0.4s var(--ease-spring);
-}
-@keyframes aboutSlideUp {
-  0%   { transform: translateY(40px) scale(0.9); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-.about-close {
-  position: absolute;
-  top: 12px; right: 12px;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.7);
-  color: var(--text-sub);
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  z-index: 5;
-}
-.about-close:hover { background: var(--cream-yellow); color: var(--text-main); transform: rotate(90deg); }
-.about-header {
-  text-align: center;
-  padding: 28px 20px 16px;
-  background: linear-gradient(135deg, var(--cream-yellow) 0%, var(--peach) 100%);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-.about-avatar {
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 10px;
-}
-.about-header h2 {
-  margin: 0;
-  font-size: 20px;
-  color: var(--text-main);
-  font-family: var(--font-cartoon);
-}
-.about-header p {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--text-sub);
-}
-.about-version {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 3px 12px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 20px;
-  font-size: 12px;
-  color: var(--text-sub);
-  font-weight: 600;
-}
-.about-body {
-  padding: 16px 20px 20px;
-}
-.about-section {
-  margin-bottom: 18px;
-}
-.about-section:last-child { margin-bottom: 0; }
-.about-section h3 {
-  font-size: 15px;
-  color: var(--text-main);
-  margin: 0 0 10px;
-  font-family: var(--font-cartoon);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.about-section p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.6;
-}
-.about-features {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.about-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  background: rgba(255,228,160,0.35);
-  border-radius: 16px;
-  font-size: 12px;
-  color: var(--text-main);
-  border: 1px solid rgba(255,228,160,0.5);
-  transition: all 0.2s;
-}
-.about-tag:hover { background: var(--cream-yellow); transform: translateY(-1px); }
-.about-footer {
-  text-align: center;
-  padding-top: 14px;
-  border-top: 1px dashed rgba(0,0,0,0.08);
-  margin-top: 4px;
-}
-.about-footer p {
-  margin: 2px 0;
-  font-size: 12px;
-  color: var(--text-sub);
-}
-.about-footer .heart { color: #FF6B6B; animation: heartBeat 1.5s ease infinite; }
-
-/* ============================================================
-   💧 水波纹（Ripple）效果
-   ============================================================ */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 60%, transparent 70%);
-  transform: scale(0);
-  animation: rippleSpread 0.6s var(--ease-smooth) forwards;
-  pointer-events: none;
-  z-index: 0;
-}
-@keyframes rippleSpread {
-  0%   { transform: scale(0); opacity: 0.8; }
-  100% { transform: scale(4); opacity: 0; }
-}
-/* 为 action-card 添加 ripple 容器支持 */
-.action-card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* ===== ⚡ 蓄力感（长按蓄力）样式 ===== */
-.action-card {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s var(--ease-spring), box-shadow 0.3s var(--ease-smooth);
-  user-select: none;
-  -webkit-user-select: none;
-}
-.action-card.charging {
-  transform: scale(0.88) !important;
-  box-shadow: inset 0 0 20px rgba(255,228,160,0.4), 0 0 30px rgba(255,179,71,0.25) !important;
-}
-.action-card.charging .card-bg-img {
-  filter: brightness(0.85) saturate(1.3);
-  transition: filter 0.3s;
-}
-/* 蓄力能量环 */
-.action-card.charging::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: inherit;
-  border: 3px solid transparent;
-  background: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--cream-yellow)) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: chargeSpin 0.8s linear infinite;
-  z-index: 2;
-  pointer-events: none;
-}
-@keyframes chargeSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-/* 蓄力文字变化 */
-.action-card.charging-text .card-name {
-  font-size: 15px;
-  letter-spacing: 2px;
-  transition: all 0.2s;
-}
-.action-card.charging-text .card-name::after {
-  content: ' 蓄力中...';
-  display: block;
-  font-size: 11px;
-  color: var(--cream-yellow);
-  margin-top: 2px;
-}
-/* 蓄力完成爆发态 */
-.action-card.charged {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 40px 10px rgba(255,228,160,0.5), 0 0 80px 20px rgba(255,209,220,0.25) !important;
-}
-/* 爆发闪光 */
-.charge-flash {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, transparent 60%);
-  z-index: 3;
-  pointer-events: none;
-  animation: chargeFlash 0.5s var(--ease-smooth) forwards;
-}
-@keyframes chargeFlash {
-  0%   { opacity: 1; transform: scale(0.5); }
-  100% { opacity: 0; transform: scale(2); }
-}
-
-/* ===== 🌀 视差滚动基础样式 ===== */
-.status-card,
-.nailong-quote {
-  will-change: transform;
-  transition: transform 0.1s linear;
-}
-
 /* ============================================================
    🏆 成就展示栏
    ============================================================ */
@@ -1208,70 +979,31 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .ach-cell-desc {
   display: none; /* 点击时在 tooltip 中展示 */
 }
-/* 新解锁闪光 - 四段弹性过冲 + 亮度脉冲 */
+/* 新解锁闪光 - 弹性过冲 */
 .ach-cell.just-unlocked {
-  animation: achUnlock 0.9s var(--ease-bounce) both;
-  overflow: visible;
+  animation: achUnlock 0.8s var(--ease-bounce) both;
 }
 @keyframes achUnlock {
-  0%   { transform: scale(0.25) rotate(-25deg); opacity: 0; filter: brightness(3) saturate(0); box-shadow: 0 0 0 0 rgba(255,228,160,0); }
-  18%  { transform: scale(1.4) rotate(12deg); opacity: 1; filter: brightness(1.6) saturate(1.4); box-shadow: 0 0 48px 20px rgba(255,179,71,0.55), 0 0 96px 40px rgba(255,209,220,0.25); }
-  35%  { transform: scale(0.78) rotate(-7deg); filter: brightness(1.15) saturate(1.1); box-shadow: 0 0 20px 8px rgba(255,179,71,0.3), 0 0 40px 16px rgba(184,240,216,0.15); }
-  55%  { transform: scale(1.18) rotate(5deg); filter: brightness(1.05) saturate(1.05); box-shadow: 0 0 14px 6px rgba(184,240,216,0.4), 0 0 28px 10px rgba(160,216,239,0.15); }
-  72%  { transform: scale(0.95) rotate(-2deg); filter: brightness(1.02); box-shadow: 0 0 8px 3px rgba(184,240,216,0.25); }
-  88%  { transform: scale(1.04) rotate(1deg); }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1) saturate(1); box-shadow: var(--shadow-card-hover); }
+  0%   { transform: scale(0.7); opacity: 0; box-shadow: 0 0 0 0 rgba(255,179,71,0); }
+  40%  { transform: scale(1.18); opacity: 1; box-shadow: 0 0 24px 8px rgba(255,179,71,0.35); }
+  60%  { transform: scale(0.95); box-shadow: 0 0 12px 4px rgba(255,179,71,0.2); }
+  80%  { transform: scale(1.04); box-shadow: 0 0 6px 2px rgba(255,179,71,0.15); }
+  100% { transform: scale(1); opacity: 1; box-shadow: var(--shadow-card-hover); }
 }
-
-/* 解锁时光辉扫过 */
-.ach-cell.just-unlocked::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -25%;
-  width: 50%; height: 100%;
-  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 70%, transparent 100%);
-  z-index: 3;
-  pointer-events: none;
-  border-radius: inherit;
-  animation: achShineSweep 0.55s 0.12s var(--ease-smooth) forwards;
-}
-@keyframes achShineSweep {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  15%  { opacity: 1; }
-  100% { transform: translateX(300%); opacity: 0; }
-}
-
-/* 解锁后持续彩色光晕呼吸 —— 三色渐变循环 */
+/* 解锁后持续光晕脉冲 */
 .ach-cell.just-unlocked::after {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -3px;
   border-radius: inherit;
+  background: linear-gradient(135deg, var(--cream-yellow), var(--sakura-pink));
   z-index: -1;
-  animation: achGlowPulse 2.8s var(--ease-smooth) both;
-  opacity: 0.55;
-  background-size: 300% 300%;
-  background-image: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow));
-  animation: achGlowPulse 2.8s var(--ease-smooth) both, achGlowRotate 2.8s linear both;
+  animation: achGlowPulse 2s var(--ease-smooth) both;
+  opacity: 0.5;
 }
 @keyframes achGlowPulse {
-  0%   { opacity: 0.7; transform: scale(1.06); }
-  50%  { opacity: 0.35; transform: scale(1.12); }
-  100% { opacity: 0; transform: scale(1.18); }
-}
-@keyframes achGlowRotate {
-  0%   { background-image: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow)); }
-  100% { background-image: conic-gradient(from 360deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow)); }
-}
-
-/* 解锁后成就名字发光 */
-.ach-cell.unlocked .ach-cell-name {
-  animation: achNameGlow 1.2s 0.5s var(--ease-smooth) both;
-}
-@keyframes achNameGlow {
-  0%   { text-shadow: 0 0 0px var(--cream-yellow); color: var(--text-main); }
-  40%  { text-shadow: 0 0 8px var(--cream-yellow), 0 0 16px var(--sakura-pink); color: #E8A317; }
-  100% { text-shadow: 0 0 3px rgba(255,228,160,0.4); color: var(--text-main); }
+  0% { opacity: 0.6; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
 }
 
 /* 成就详情 tooltip */
@@ -1545,13 +1277,13 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🐉 迷你奶龙贴纸（页面边角） ===== -->
 <div class="sticker sticker-tr">
-  <img loading="lazy" src="nailong3.png" alt="奶龙">
+  <img src="nailong3.png" alt="奶龙">
 </div>
 <div class="sticker sticker-bl">
-  <img loading="lazy" src="nailong5.png" alt="奶龙">
+  <img src="nailong5.png" alt="奶龙">
 </div>
 <div class="sticker sticker-br">
-  <img loading="lazy" src="nailong6.png" alt="奶龙">
+  <img src="nailong6.png" alt="奶龙">
 </div>
 
 <!-- ===== 📱 手机框架 ===== -->
@@ -1570,21 +1302,21 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
   <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
   <aside class="side-menu" id="sideMenu">
     <div class="menu-header">
-      <img loading="lazy" src="nailong3.png" class="menu-avatar" alt="奶龙头像">
+      <img src="nailong3.png" class="menu-avatar" alt="奶龙头像">
       <h3>奶龙图书馆</h3>
       <p>SDUFE Library Check-in</p>
     </div>
     <div class="menu-list">
-      <div class="menu-item" onclick="toggleMenu(); refreshAllStatus()">
+      <div class="menu-item" onclick="toggleMenu(); showToast('已刷新状态')">
         <span class="icon">🔄</span>
         <span>刷新状态</span>
       </div>
-      <div class="menu-item" onclick="toggleMenu(); showTodayHistory()">
+      <div class="menu-item" onclick="toggleMenu(); document.getElementById('historySection').scrollIntoView({behavior:'smooth'})">
         <span class="icon">📜</span>
         <span>今日记录</span>
         <span class="menu-badge" id="menuBadge" style="display:none">0</span>
       </div>
-      <div class="menu-item" onclick="toggleMenu(); showAbout()">
+      <div class="menu-item" onclick="toggleMenu(); showToast('v2.6 文案优化版')">
         <span class="icon">ℹ️</span>
         <span>关于</span>
       </div>
@@ -1598,7 +1330,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     <div class="error-banner" id="errorBanner">
       <span id="errorText">网络错误，请连接校园网 SDUFE WiFi</span>
       <span class="retry-btn" onclick="retryTimestamp()">重试</span>
-      <img loading="lazy" src="nailong-surprise.png" class="error-nailong" alt="惊讶奶龙">
+      <img src="nailong-surprise.png" class="error-nailong" alt="惊讶奶龙">
     </div>
 
     <!-- ===== 🎴 状态信息卡片 ===== -->
@@ -1634,11 +1366,11 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
       <!-- 签到入馆 -->
       <div class="action-card checkin" onclick="doAction('1')">
         <!-- 奶龙背景图：100%不透明，无遮罩 -->
-        <img loading="lazy" src="nailong3.png" class="card-bg-img" alt="签到奶龙">
+        <img src="nailong3.png" class="card-bg-img" alt="签到奶龙">
         <!-- 底部渐变文字底条（仅底部，非全卡片遮罩） -->
         <div class="card-text-bar"></div>
         <!-- hover 弹出迷你奶龙 -->
-        <img loading="lazy" src="nailong1.png" class="mini-nailong" alt="迷你奶龙">
+        <img src="nailong1.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">📍</div>
           <div class="card-name">签到入馆</div>
@@ -1648,9 +1380,9 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
       <!-- 临时离馆 -->
       <div class="action-card tempout" onclick="doAction('2')">
-        <img loading="lazy" src="nailong2.png" class="card-bg-img" alt="暂离奶龙">
+        <img src="nailong2.png" class="card-bg-img" alt="暂离奶龙">
         <div class="card-text-bar"></div>
-        <img loading="lazy" src="nailong4.png" class="mini-nailong" alt="迷你奶龙">
+        <img src="nailong4.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">🚶</div>
           <div class="card-name">临时离馆</div>
@@ -1660,9 +1392,9 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
       <!-- 签离出馆 -->
       <div class="action-card checkout" onclick="doAction('3')">
-        <img loading="lazy" src="nailong4.png" class="card-bg-img" alt="签离奶龙">
+        <img src="nailong4.png" class="card-bg-img" alt="签离奶龙">
         <div class="card-text-bar"></div>
-        <img loading="lazy" src="nailong5.png" class="mini-nailong" alt="迷你奶龙">
+        <img src="nailong5.png" class="mini-nailong" alt="迷你奶龙">
         <div class="card-content">
           <div class="card-icon">🚪</div>
           <div class="card-name">签离出馆</div>
@@ -1685,12 +1417,12 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
     <!-- ===== 🦵 彩蛋奶龙 ===== -->
     <div class="footer-nailong">
-      <img loading="lazy" src="nailong-longleg.jpg" alt="长腿奶龙">
+      <img src="nailong-longleg.jpg" alt="长腿奶龙">
     </div>
 
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
-      <span class="heart">❤</span> SDUFE Library Remote Check-in v3.0<br>
+      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.5<br>
       奶龙奶油卡通风 · 请连接校园网使用
     </div>
 
@@ -1699,7 +1431,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🍥 加载动画 ===== -->
 <div class="loading-overlay" id="loading">
-  <img loading="lazy" src="nailong-sleep.png" class="nailong-loader" alt="奶龙加载中">
+  <img src="nailong-sleep.png" class="nailong-loader" alt="奶龙加载中">
   <div class="loading-text">奶龙正在获取时间...💤</div>
 </div>
 
@@ -1727,7 +1459,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
 <!-- ===== 🥚 长按彩蛋 ===== -->
 <div class="easter-egg-overlay" id="easterEgg" onclick="this.classList.remove('show')">
-  <img loading="lazy" src="nailong3.png" class="easter-egg-img" alt="彩蛋奶龙">
+  <img src="nailong3.png" class="easter-egg-img" alt="彩蛋奶龙">
   <div class="easter-egg-text" id="eggText">你发现了奶龙的秘密！</div>
   <div class="easter-egg-sub">点击任意处关闭</div>
 </div>
@@ -1739,7 +1471,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 <div class="confetti-container" id="confettiBox"></div>
 
 <!-- ===== 🐉 滚动跟随浮动奶龙 ===== -->
-<img loading="lazy" src="nailong1.png" class="scroll-nailong" id="scrollNailong" alt="浮动奶龙">
+<img src="nailong1.png" class="scroll-nailong" id="scrollNailong" alt="浮动奶龙">
 
 <!-- ===== 🍃 季节飘落装饰容器 ===== -->
 <div id="seasonBox"></div>
@@ -1872,144 +1604,6 @@ function retryTimestamp() {
   showToast('奶龙正在重试...');
 }
 
-// ===== 🔄 刷新状态（菜单按钮真实功能） =====
-function refreshAllStatus() {
-  showToast('🔄 奶龙正在刷新...');
-  // 1. 重新检测网络
-  updateStatus();
-  // 2. 重新渲染签到状态
-  renderCheckInStatus();
-  // 3. 更新连续签到天数
-  updateStreakDisplay();
-  // 4. 更新语录
-  showRandomQuote();
-  // 6. 更新时间
-  updateNavTime();
-  // 完成提示
-  setTimeout(() => showToast('✅ 刷新完成！奶龙已更新所有状态'), 600);
-}
-
-// ===== 📜 今日记录（菜单按钮真实功能） =====
-function showTodayHistory() {
-  const historySection = document.getElementById('historySection');
-  const historyList = document.getElementById('historyList');
-  const today = new Date().toDateString();
-  const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-  const todayRecords = history.filter(h => new Date(h.time).toDateString() === today);
-
-  if (todayRecords.length === 0) {
-    // 没有记录 → 显示提示并展开空记录
-    historySection.style.display = 'block';
-    historyList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-sub);font-size:14px;">📭 今日暂无记录<br><span style="font-size:12px;">奶龙：你还没签到呢，快去！</span></div>';
-  } else {
-    // 有记录 → 确保展开并渲染
-    historySection.style.display = 'block';
-    renderHistory();
-  }
-  // 滚动到记录区域
-  setTimeout(() => {
-    historySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // 高亮闪烁一下
-    historySection.style.animation = 'highlightPulse 1s var(--ease-smooth)';
-    setTimeout(() => { historySection.style.animation = ''; }, 1000);
-  }, 100);
-}
-
-// 记录区域高亮动画
-@keyframes highlightPulse {
-  0%   { box-shadow: var(--shadow-card); }
-  50%  { box-shadow: 0 0 24px 6px rgba(255,228,160,0.4); }
-  100% { box-shadow: var(--shadow-card); }
-}
-
-// ===== ℹ️ 关于（菜单按钮真实功能） =====
-function showAbout() {
-  const aboutHTML = `
-    <div class="about-overlay" id="aboutOverlay" onclick="if(event.target===this)closeAbout()">
-      <div class="about-card">
-        <button class="about-close" onclick="closeAbout()">✕</button>
-        <div class="about-header">
-          <img loading="lazy" src="nailong3.png" class="about-avatar" alt="奶龙">
-          <h2>奶龙图书馆签到</h2>
-          <p>SDUFE Library Remote Check-in</p>
-          <span class="about-version">v2.8 微交互升级版</span>
-        </div>
-        <div class="about-body">
-          <div class="about-section">
-            <h3>✨ 功能列表</h3>
-            <div class="about-features">
-              <span class="about-tag">🔐 密码保护</span>
-              <span class="about-tag">📍 签到入馆</span>
-              <span class="about-tag">🚶 临时离馆</span>
-              <span class="about-tag">🚪 签离出馆</span>
-              <span class="about-tag">🔥 连续签到</span>
-              <span class="about-tag">🏆 成就系统</span>
-              <span class="about-tag">📜 历史记录</span>
-              <span class="about-tag">🗣️ 语音播报</span>
-              <span class="about-tag">🎉 彩纸庆祝</span>
-              <span class="about-tag">🍃 季节装饰</span>
-              <span class="about-tag">🌙 时段主题</span>
-              <span class="about-tag">😤 闲置催促</span>
-              <span class="about-tag">🎨 微动效</span>
-              <span class="about-tag">💧 水波纹</span>
-              <span class="about-tag">⚡ 蓄力感</span>
-              <span class="about-tag">🌀 视差滚动</span>
-            </div>
-          </div>
-          <div class="about-section">
-            <h3>🐉 关于奶龙</h3>
-            <p>奶龙是山东财经大学图书馆的守护精灵。每天督促你签到，陪你学习，见证你的每一个成就。</p>
-            <p style="font-size:12px;color:var(--text-sub);margin-top:8px;">奶龙语录已收录 ${NAILONG_QUOTES.length} 条金句，每日随机展示。</p>
-          </div>
-          <div class="about-section">
-            <h3>💻 技术栈</h3>
-            <p>纯前端 HTML + CSS + JavaScript，无框架依赖。Service Worker 离线缓存，GitHub Pages 部署。</p>
-          </div>
-          <div class="about-footer">
-            <p>Made with <span class="heart">❤</span> by dpoy-zht</p>
-            <p style="font-size:11px;color:var(--text-sub);">仅供学习交流使用，请遵守学校相关规定</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML('beforeend', aboutHTML);
-  // 入场动画
-  const card = document.querySelector('.about-card');
-  card.style.transform = 'scale(0.85) translateY(30px)';
-  card.style.opacity = '0';
-  requestAnimationFrame(() => {
-    card.style.transition = 'all 0.4s var(--ease-spring)';
-    card.style.transform = 'scale(1) translateY(0)';
-    card.style.opacity = '1';
-  });
-}
-
-function closeAbout() {
-  const overlay = document.getElementById('aboutOverlay');
-  if (!overlay) return;
-  const card = overlay.querySelector('.about-card');
-  card.style.transform = 'scale(0.9) translateY(20px)';
-  card.style.opacity = '0';
-  setTimeout(() => overlay.remove(), 300);
-}
-
-// 更新菜单徽章
-function updateMenuBadge() {
-  const today = new Date().toDateString();
-  const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-  const count = history.filter(h => new Date(h.time).toDateString() === today).length;
-  const badge = document.getElementById('menuBadge');
-  if (count > 0) {
-    badge.textContent = count;
-    badge.style.display = 'inline-flex';
-  } else {
-    badge.style.display = 'none';
-  }
-}
-// 初始化时更新一次
-setTimeout(updateMenuBadge, 1000);
-
 // ===== 奶龙语音播报 =====
 function speakNailong(text) {
   if (!('speechSynthesis' in window)) return;
@@ -2072,26 +1666,11 @@ function doAction(type) {
 
       addHistory(type, ts);
 
-      // 奶龙三段式表情变化 + 弹跳
+      // 奶龙弹跳 + 撒花
       const nailongEl = document.getElementById('statusNailong');
-      // 第一段：害羞捂脸（0-30%）
-      nailongEl.src = 'nailong-shock.png';
-      nailongEl.style.transform = 'scale(0.85) rotate(-8deg)';
-      nailongEl.style.transition = 'transform 0.2s var(--ease-spring)';
-      // 第二段：偷偷看（30-60%）
-      setTimeout(() => {
-        nailongEl.style.transform = 'scale(1.1) rotate(5deg)';
-        speakNailong('被你发现了！奶龙害羞了~');
-      }, 400);
-      // 第三段：开心转圈（60-100%）
-      setTimeout(() => {
-        nailongEl.src = 'nailong-happy.png';
-        nailongEl.classList.remove('nailong-bounce');
-        void nailongEl.offsetWidth;
-        nailongEl.classList.add('nailong-bounce');
-        nailongEl.style.transform = '';
-        nailongEl.style.transition = '';
-      }, 900);
+      nailongEl.classList.remove('nailong-bounce');
+      void nailongEl.offsetWidth; // 触发 reflow 重播动画
+      nailongEl.classList.add('nailong-bounce');
       launchConfetti();
 
       document.getElementById('resultIcon').textContent = '🎉';
@@ -2329,23 +1908,13 @@ function resetIdleTimer() {
     const bubble = document.getElementById('idleBubble');
     bubble.textContent = idleMsgs[Math.floor(Math.random() * idleMsgs.length)];
     bubble.classList.add('show');
-    // 奶龙抖动 + 滤镜逐渐犀利
+    // 奶龙抖动
     const sn = document.getElementById('scrollNailong');
-    if (sn) {
-      sn.style.animation = 'none';
-      void sn.offsetWidth;
-      // 三段式：正常 → 略微变色 → 犀利盯人
-      sn.style.filter = 'hue-rotate(0deg) brightness(1) saturate(1)';
-      sn.style.transition = 'filter 0.5s var(--ease-smooth)';
-      setTimeout(() => { sn.style.filter = 'hue-rotate(15deg) brightness(0.95) saturate(1.3)'; }, 300);
-      setTimeout(() => { sn.style.filter = 'hue-rotate(30deg) brightness(0.9) saturate(1.6) contrast(1.2)'; }, 800);
-      sn.style.animation = 'scrollFloat 0.3s ease-in-out 3';
-    }
+    if (sn) { sn.style.animation = 'none'; void sn.offsetWidth; sn.style.animation = 'scrollFloat 0.3s ease-in-out 3'; }
   }, 30000);
 }
 ['click','touchstart','scroll','keydown'].forEach(e => document.addEventListener(e, resetIdleTimer, {passive:true}));
-// 延迟启动闲置计时器，避免首屏加载干扰
-setTimeout(resetIdleTimer, 2000);
+resetIdleTimer();
 const NAILONG_QUOTES = [
   '今天也是适合签到的一天（被迫营业版）',
   '你为什么还没签到？奶龙已经在墙上抠出一个人形了',
@@ -2400,155 +1969,7 @@ function createSeasonParticles() {
     box.appendChild(el);
   }
 }
-// 延迟加载非首屏资源
-setTimeout(createSeasonParticles, 1500);
-
-// ===== 💧 水波纹（Ripple）效果 =====
-function createRipple(e, el) {
-  // 移除旧 ripple
-  const old = el.querySelector('.ripple');
-  if (old) old.remove();
-
-  const ripple = document.createElement('span');
-  ripple.className = 'ripple';
-
-  const rect = el.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height) * 2;
-  const x = (e.clientX || e.touches[0].clientX) - rect.left - size / 2;
-  const y = (e.clientY || e.touches[0].clientY) - rect.top - size / 2;
-
-  ripple.style.width  = ripple.style.height = size + 'px';
-  ripple.style.left = x + 'px';
-  ripple.style.top  = y + 'px';
-  ripple.style.position = 'absolute';
-
-  // 根据元素背景色决定波纹色
-  const isDark = el.classList.contains('btn-cream') ||
-                  el.closest('.btn-cream') ||
-                  window.getComputedStyle(el).backgroundColor !== 'rgba(0, 0, 0, 0)';
-  // 奶油按钮用白色波纹，卡片用主题色波纹
-  if (el.classList.contains('btn-cream') || el.closest('.btn-cream')) {
-    ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 60%, transparent 72%)';
-  } else {
-    ripple.style.background = 'radial-gradient(circle, rgba(255,228,160,0.45) 0%, rgba(255,209,220,0.15) 60%, transparent 72%)';
-  }
-
-  ripple.style.zIndex = '0';
-  ripple.style.pointerEvents = 'none';
-  ripple.style.borderRadius = '50%';
-  ripple.style.transform = 'scale(0)';
-  ripple.style.animation = 'rippleSpread 0.6s cubic-bezier(0.4,0,0.2,1) forwards';
-
-  el.appendChild(ripple);
-  setTimeout(() => { if (ripple.parentNode) ripple.remove(); }, 700);
-}
-
-// 绑定按钮 ripple
-document.querySelectorAll('.btn-cream, .btn-cream-secondary').forEach(el => {
-  ['mousedown','touchstart'].forEach(evt => {
-    el.addEventListener(evt, e => createRipple(e, el), {passive:true});
-  });
-});
-
-// 绑定 action-card ripple
-document.querySelectorAll('.action-card').forEach(el => {
-  ['mousedown','touchstart'].forEach(evt => {
-    el.addEventListener(evt, e => createRipple(e, el), {passive:true});
-  });
-});
-
-// ===== ⚡ 蓄力感（长按蓄力）系统 =====
-let chargeTimer = null;
-let chargeActive = false;
-const CHARGE_TIME = 400; // 蓄力阈值 ms
-
-function startCharge(el, type) {
-  if (chargeActive) return;
-  chargeActive = true;
-
-  // 进入蓄力状态：缩小 + 能量环
-  el.classList.add('charging');
-  const content = el.querySelector('.card-content');
-  if (content) content.classList.add('charging-text');
-
-  chargeTimer = setTimeout(() => {
-    // 蓄力完成：爆发态
-    el.classList.remove('charging');
-    el.classList.add('charged');
-    // 爆发闪光
-    const flash = document.createElement('div');
-    flash.className = 'charge-flash';
-    el.appendChild(flash);
-    setTimeout(() => flash.remove(), 600);
-  }, CHARGE_TIME);
-}
-
-function endCharge(el, type) {
-  clearTimeout(chargeTimer);
-  const wasCharged = el.classList.contains('charged');
-
-  el.classList.remove('charging', 'charged');
-  const content = el.querySelector('.card-content');
-  if (content) content.classList.remove('charging-text');
-
-  chargeActive = false;
-
-  if (wasCharged) {
-    // 蓄力完成 → 执行签到（带爆发动画）
-    el.style.transform = 'scale(1.08)';
-    setTimeout(() => { el.style.transform = ''; doAction(type); }, 120);
-  }
-  // 短按不处理，让 onclick 执行 doAction
-}
-
-// 绑定蓄力事件到 action-card（保留 onclick 兜底）
-document.querySelectorAll('.action-card').forEach(card => {
-  const type = card.getAttribute('onclick')?.match(/doAction\('(\d)'\)/)?.[1];
-  if (!type) return;
-
-  let chargeStarted = false;
-
-  card.addEventListener('pointerdown', e => {
-    chargeStarted = true;
-    startCharge(card, type);
-  });
-
-  card.addEventListener('pointerup', e => {
-    if (!chargeStarted) return;
-    chargeStarted = false;
-    const wasCharged = card.classList.contains('charged');
-    endCharge(card, type);
-    // 如果未触发蓄力完成，让 onclick 处理短按
-    if (!wasCharged) {
-      // 短按：由 onclick 执行 doAction
-    }
-  });
-
-  card.addEventListener('pointerleave', () => {
-    if (chargeStarted) {
-      chargeStarted = false;
-      endCharge(card, type);
-    }
-  });
-});
-
-// ===== 🌀 视差（Parallax）滚动效果 =====
-let parallaxRAF = null;
-function applyParallax() {
-  const sy = window.scrollY || window.pageYOffset;
-  // 背景最慢
-  document.body.style.backgroundPositionY = (sy * 0.08) + 'px';
-  // 状态卡片中等
-  const statusCard = document.querySelector('.status-card');
-  if (statusCard) statusCard.style.transform = 'translateY(' + (sy * 0.04) + 'px)';
-  // 语录框稍快
-  const quoteBox = document.getElementById('quoteBox');
-  if (quoteBox) quoteBox.style.transform = 'translateY(' + (sy * 0.06) + 'px)';
-  parallaxRAF = null;
-}
-window.addEventListener('scroll', () => {
-  if (!parallaxRAF) parallaxRAF = requestAnimationFrame(applyParallax);
-}, {passive:true});
+createSeasonParticles();
 
 // ===== 点击弹窗遮罩关闭 =====
 document.getElementById('resultOverlay').addEventListener('click', function(e) {
