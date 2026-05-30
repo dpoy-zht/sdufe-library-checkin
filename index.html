@@ -2497,27 +2497,38 @@ function endCharge(el, type) {
     // 蓄力完成 → 执行签到（带爆发动画）
     el.style.transform = 'scale(1.08)';
     setTimeout(() => { el.style.transform = ''; doAction(type); }, 120);
-  } else {
-    // 短按 → 普通签到
-    doAction(type);
   }
+  // 短按不处理，让 onclick 执行 doAction
 }
 
-// 绑定蓄力事件到 action-card（替换 onclick）
+// 绑定蓄力事件到 action-card（保留 onclick 兜底）
 document.querySelectorAll('.action-card').forEach(card => {
   const type = card.getAttribute('onclick')?.match(/doAction\('(\d)'\)/)?.[1];
   if (!type) return;
-  card.removeAttribute('onclick');
 
-  ['mousedown','touchstart'].forEach(evt => {
-    card.addEventListener(evt, e => {
-      e.preventDefault();
-      startCharge(card, type);
-    }, {passive:false});
+  let chargeStarted = false;
+
+  card.addEventListener('pointerdown', e => {
+    chargeStarted = true;
+    startCharge(card, type);
   });
 
-  ['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
-    card.addEventListener(evt, () => endCharge(card, type));
+  card.addEventListener('pointerup', e => {
+    if (!chargeStarted) return;
+    chargeStarted = false;
+    const wasCharged = card.classList.contains('charged');
+    endCharge(card, type);
+    // 如果未触发蓄力完成，让 onclick 处理短按
+    if (!wasCharged) {
+      // 短按：由 onclick 执行 doAction
+    }
+  });
+
+  card.addEventListener('pointerleave', () => {
+    if (chargeStarted) {
+      chargeStarted = false;
+      endCharge(card, type);
+    }
   });
 });
 
