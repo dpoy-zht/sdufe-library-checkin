@@ -1316,7 +1316,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
         <span>今日记录</span>
         <span class="menu-badge" id="menuBadge" style="display:none">0</span>
       </div>
-      <div class="menu-item" onclick="toggleMenu(); showToast('v2.5 质感升级版')">
+      <div class="menu-item" onclick="toggleMenu(); showToast('v2.6 文案优化版')">
         <span class="icon">ℹ️</span>
         <span>关于</span>
       </div>
@@ -1568,13 +1568,13 @@ function renderCheckInStatus() {
 
   if (isCheckedIn) {
     nailongImg.src = 'nailong-happy.png';
-    statusValue.textContent = '在馆学习中';
-    statusDetail.textContent = '奶龙陪你加油鸭！';
+    statusValue.textContent = '已签到 ✓';
+    statusDetail.textContent = '奶龙确认你人还在，继续卷';
     statusDot.classList.remove('offline');
   } else {
     nailongImg.src = 'nailong-urge.png';
     statusValue.textContent = '未签到';
-    statusDetail.textContent = '快去签到！奶龙等急了';
+    statusDetail.textContent = '快去签到！奶龙眼神已经不对了';
     statusDot.classList.add('offline');
   }
 }
@@ -1673,10 +1673,10 @@ function doAction(type) {
       nailongEl.classList.add('nailong-bounce');
       launchConfetti();
 
-      document.getElementById('resultIcon').textContent = '✅';
-      document.getElementById('resultTitle').textContent = names[type] + ' 就绪';
+      document.getElementById('resultIcon').textContent = '🎉';
+      document.getElementById('resultTitle').textContent = names[type] + ' 成功！';
       document.getElementById('resultMsg').textContent =
-        '时间戳: ' + ts + '\n请在微信中打开链接完成' + names[type];
+        '时间戳: ' + ts + '\n链接已就绪，快去微信完成' + names[type] + '\n（奶龙提醒：别看了，快去签）';
       document.getElementById('resultUrl').style.display = 'block';
       document.getElementById('resultUrl').textContent = url;
       document.getElementById('resultOverlay').classList.add('show');
@@ -1685,7 +1685,7 @@ function doAction(type) {
       document.getElementById('loading').classList.remove('show');
       document.getElementById('errorBanner').classList.add('show');
       document.getElementById('errorText').textContent =
-        '网络错误：无法连接图书馆服务器，请确认已连接 SDUFE 校园网';
+        '图书馆服务器又装死了（奶龙已帮你骂过）\n请确认已连接 SDUFE 校园网后重试';
     });
 }
 
@@ -1758,8 +1758,16 @@ function launchConfetti() {
 
 // ===== Toast =====
 function showToast(msg) {
+  const msgs = {
+    '已刷新状态': '奶龙帮你刷新了，别墨迹',
+    'v2.5 质感升级版': 'v2.5 来了，奶龙又胖了一圈',
+    '获取时间戳失败，请确认已连接校园网': '图书馆服务器又装死了，奶龙已帮你骂过',
+    '链接已复制': '链接到手！快去微信签到，别让奶龙等',
+    '奶龙正在重试...': '奶龙正在狂敲图书馆服务器的大门...',
+    '网络错误：无法连接图书馆服务器，请确认已连接 SDUFE 校园网': '网断了？奶龙表示理解，毕竟山财的网...（懂的都懂）',
+  };
   const t = document.getElementById('toast');
-  t.textContent = msg;
+  t.textContent = msgs[msg] || msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
@@ -1795,12 +1803,12 @@ if ('serviceWorker' in navigator) {
 
 // ===== 🥚 长按奶龙彩蛋 =====
 const EGG_TEXTS = [
-  '你发现了奶龙的秘密！',
-  '奶龙说：你居然长按了我？！',
-  '隐藏成就：奶龙观察者',
-  '奶龙其实会飞，只是懒',
-  '彩蛋！你比99%的人有耐心',
-  '奶龙被你摸头了，好害羞'
+  '彩蛋触发！奶龙：你摸到我隐藏开关了？',
+  '奶龙说：长按的人都是有故事的',
+  '隐藏成就进度+1 —— 奶龙观察者',
+  '奶龙其实会瞬移，只是懒得演示',
+  '你比90%的人更有耐心（另外10%还在按）',
+  '奶龙被你摸头了，好羞涩（才怪）'
 ];
 let longPressTimer = null;
 document.querySelectorAll('.sticker img, .scroll-nailong, .status-nailong, .nav-icon').forEach(el => {
@@ -1828,15 +1836,15 @@ document.querySelectorAll('.sticker img, .scroll-nailong, .status-nailong, .nav-
 
 // ===== 🏆 签到成就系统 =====
 const ACHIEVEMENTS = [
-  { id: 'first_checkin', name: '初来乍到', desc: '完成第一次签到', icon: '🌟', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 1 },
-  { id: 'check_3',      name: '三天打鱼', desc: '连续签到3天', icon: '🐟', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 3 },
-  { id: 'check_7',      name: '一周勇士', desc: '连续签到7天', icon: '⚔️', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 7 },
-  { id: 'check_30',     name: '月度学霸', desc: '连续签到30天', icon: '📚', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 30 },
-  { id: 'night_owl',    name: '深夜签到侠', desc: '23:00后签到', icon: '🦉', check: () => new Date().getHours() >= 23 },
-  { id: 'early_bird',   name: '早起鸟儿', desc: '8:00前签到', icon: '🐦', check: () => new Date().getHours() < 8 },
-  { id: 'back_forth',   name: '签了又签', desc: '同一天签到+签离', icon: '🔄', check: () => localStorage.getItem('checkedIn')==='false' && localStorage.getItem('lastCheckinDate')===new Date().toISOString().slice(0,10) },
-  { id: 'total_10',     name: '签到达人', desc: '累计签到10次', icon: '🏅', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 10 },
-  { id: 'total_50',     name: '签到狂魔', desc: '累计签到50次', icon: '👑', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 50 },
+  { id: 'first_checkin', name: '初来乍到',   desc: '第一次签到，奶龙见证了你的初次', icon: '🌟', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 1 },
+  { id: 'check_3',      name: '三天打鱼',   desc: '连续签到3天，开始上瘾了？', icon: '🐟', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 3 },
+  { id: 'check_7',      name: '一周冤种',   desc: '连续7天，你是真想学习还是真闲？', icon: '⚔️', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 7 },
+  { id: 'check_30',     name: '月度自虐',   desc: '连续30天，奶龙已经开始佩服你了', icon: '📚', check: () => parseInt(localStorage.getItem('checkinStreak')||'0') >= 30 },
+  { id: 'night_owl',    name: '深夜emo签',  desc: '23点后签到，是学习还是失眠？', icon: '🦉', check: () => new Date().getHours() >= 23 },
+  { id: 'early_bird',   name: '早起鬼见愁', desc: '8点前签到，你是人还是闹钟？', icon: '🐦', check: () => new Date().getHours() < 8 },
+  { id: 'back_forth',   name: '签了又签',   desc: '同一天签到+签离，你是在练习吗', icon: '🔄', check: () => localStorage.getItem('checkedIn')==='false' && localStorage.getItem('lastCheckinDate')===new Date().toISOString().slice(0,10) },
+  { id: 'total_10',     name: '签到卷王·初段', desc: '累计10次，你已经被奶龙标记为卷王候选人', icon: '🏅', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 10 },
+  { id: 'total_50',     name: '签到卷王·破壁', desc: '累计50次，图书馆阿姨已经认识你了', icon: '👑', check: () => parseInt(localStorage.getItem('totalCheckins')||'0') >= 50 },
 ];
 
 function checkAchievements() {
@@ -1887,7 +1895,12 @@ renderAchievementGrid();
 
 // ===== 😤 闲置催促 =====
 let idleTimer = null;
-const idleMsgs = ['你在看什么？快去签到！','奶龙等你很久了...','还没签到？奶龙急了！','别看了，签了吗？'];
+const idleMsgs = [
+  '你在看什么？快去签到！奶龙已经盯着你30秒了',
+  '奶龙：我在看着你。我在数着。30...29...',
+  '还没签到？奶龙开始怀疑你是不是把图书馆忘了',
+  '别看了，签了吗？没签的话奶龙要开始念经了',
+];
 function resetIdleTimer() {
   clearTimeout(idleTimer);
   document.getElementById('idleBubble').classList.remove('show');
@@ -1903,21 +1916,21 @@ function resetIdleTimer() {
 ['click','touchstart','scroll','keydown'].forEach(e => document.addEventListener(e, resetIdleTimer, {passive:true}));
 resetIdleTimer();
 const NAILONG_QUOTES = [
-  '今天也是适合签到的一天',
-  '你为什么还没签到？奶龙哭了',
-  '签到使我快乐，不签使我焦虑',
-  '图书馆那么大，奶龙想去看看',
-  '签到的不是时间，是青春',
-  '别卷了，先签到吧',
-  '你签的每次到，都是奶龙的骄傲',
-  '今天图书馆的空调温度刚好',
-  '摸鱼可以，但别忘了签离',
-  '签个到怎么了？奶龙每天都签',
-  '奶龙在图书馆等你，风雨无阻',
-  '别人在努力，你在签到，这就够了',
-  '签到入馆：开启学霸模式',
-  '临时离馆：战略性撤退',
-  '签离出馆：完美收官'
+  '今天也是适合签到的一天（被迫营业版）',
+  '你为什么还没签到？奶龙已经在墙上抠出一个人形了',
+  '签到使我快乐，不签使我焦虑——奶龙原话',
+  '图书馆那么大，奶龙想去看看，你倒是签到啊',
+  '签到的不是时间，是发际线',
+  '别卷了，先签到吧，卷王也是要签到的',
+  '你签的每次到，都是奶龙的骄傲（强行骄傲）',
+  '今天图书馆的空调温度刚好，适合签到发呆',
+  '摸鱼可以，但别忘了签离，不然奶龙要帮你编借口了',
+  '签个到怎么了？奶龙每天都签，也没见成学霸',
+  '奶龙在图书馆等你，风雨无阻——主要是怕你忘了签到被系统拉黑',
+  '别人在努力，你在签到，这就够了（才怪）',
+  '签到入馆：假装要学习的仪式感',
+  '临时离馆：战略性撤退，去买奶茶算吗',
+  '签离出馆：今天的演技到此结束，明天继续',
 ];
 function showRandomQuote() {
   const el = document.getElementById('quoteText');
