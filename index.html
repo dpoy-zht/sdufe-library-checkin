@@ -922,6 +922,103 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .btn-cream-secondary:active { transform: scale(0.96) translateY(1px); background: var(--cream-yellow); color: var(--text-main); }
 
 /* ============================================================
+   💧 水波纹（Ripple）效果
+   ============================================================ */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 60%, transparent 70%);
+  transform: scale(0);
+  animation: rippleSpread 0.6s var(--ease-smooth) forwards;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes rippleSpread {
+  0%   { transform: scale(0); opacity: 0.8; }
+  100% { transform: scale(4); opacity: 0; }
+}
+/* 为 action-card 添加 ripple 容器支持 */
+.action-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== ⚡ 蓄力感（长按蓄力）样式 ===== */
+.action-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.3s var(--ease-smooth);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.action-card.charging {
+  transform: scale(0.88) !important;
+  box-shadow: inset 0 0 20px rgba(255,228,160,0.4), 0 0 30px rgba(255,179,71,0.25) !important;
+}
+.action-card.charging .card-bg-img {
+  filter: brightness(0.85) saturate(1.3);
+  transition: filter 0.3s;
+}
+/* 蓄力能量环 */
+.action-card.charging::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 3px solid transparent;
+  background: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--cream-yellow)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: chargeSpin 0.8s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+@keyframes chargeSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* 蓄力文字变化 */
+.action-card.charging-text .card-name {
+  font-size: 15px;
+  letter-spacing: 2px;
+  transition: all 0.2s;
+}
+.action-card.charging-text .card-name::after {
+  content: ' 蓄力中...';
+  display: block;
+  font-size: 11px;
+  color: var(--cream-yellow);
+  margin-top: 2px;
+}
+/* 蓄力完成爆发态 */
+.action-card.charged {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 40px 10px rgba(255,228,160,0.5), 0 0 80px 20px rgba(255,209,220,0.25) !important;
+}
+/* 爆发闪光 */
+.charge-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, transparent 60%);
+  z-index: 3;
+  pointer-events: none;
+  animation: chargeFlash 0.5s var(--ease-smooth) forwards;
+}
+@keyframes chargeFlash {
+  0%   { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+/* ===== 🌀 视差滚动基础样式 ===== */
+.status-card,
+.nailong-quote {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ============================================================
    🏆 成就展示栏
    ============================================================ */
 .achievement-section {
@@ -979,31 +1076,70 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
 .ach-cell-desc {
   display: none; /* 点击时在 tooltip 中展示 */
 }
-/* 新解锁闪光 - 弹性过冲 */
+/* 新解锁闪光 - 四段弹性过冲 + 亮度脉冲 */
 .ach-cell.just-unlocked {
-  animation: achUnlock 0.8s var(--ease-bounce) both;
+  animation: achUnlock 0.9s var(--ease-bounce) both;
+  overflow: visible;
 }
 @keyframes achUnlock {
-  0%   { transform: scale(0.7); opacity: 0; box-shadow: 0 0 0 0 rgba(255,179,71,0); }
-  40%  { transform: scale(1.18); opacity: 1; box-shadow: 0 0 24px 8px rgba(255,179,71,0.35); }
-  60%  { transform: scale(0.95); box-shadow: 0 0 12px 4px rgba(255,179,71,0.2); }
-  80%  { transform: scale(1.04); box-shadow: 0 0 6px 2px rgba(255,179,71,0.15); }
-  100% { transform: scale(1); opacity: 1; box-shadow: var(--shadow-card-hover); }
+  0%   { transform: scale(0.25) rotate(-25deg); opacity: 0; filter: brightness(3) saturate(0); box-shadow: 0 0 0 0 rgba(255,228,160,0); }
+  18%  { transform: scale(1.4) rotate(12deg); opacity: 1; filter: brightness(1.6) saturate(1.4); box-shadow: 0 0 48px 20px rgba(255,179,71,0.55), 0 0 96px 40px rgba(255,209,220,0.25); }
+  35%  { transform: scale(0.78) rotate(-7deg); filter: brightness(1.15) saturate(1.1); box-shadow: 0 0 20px 8px rgba(255,179,71,0.3), 0 0 40px 16px rgba(184,240,216,0.15); }
+  55%  { transform: scale(1.18) rotate(5deg); filter: brightness(1.05) saturate(1.05); box-shadow: 0 0 14px 6px rgba(184,240,216,0.4), 0 0 28px 10px rgba(160,216,239,0.15); }
+  72%  { transform: scale(0.95) rotate(-2deg); filter: brightness(1.02); box-shadow: 0 0 8px 3px rgba(184,240,216,0.25); }
+  88%  { transform: scale(1.04) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1) saturate(1); box-shadow: var(--shadow-card-hover); }
 }
-/* 解锁后持续光晕脉冲 */
+
+/* 解锁时光辉扫过 */
+.ach-cell.just-unlocked::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -25%;
+  width: 50%; height: 100%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 70%, transparent 100%);
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  animation: achShineSweep 0.55s 0.12s var(--ease-smooth) forwards;
+}
+@keyframes achShineSweep {
+  0%   { left: -50%; opacity: 0; }
+  15%  { opacity: 1; }
+  100% { left: 150%; opacity: 0; }
+}
+
+/* 解锁后持续彩色光晕呼吸 —— 三色渐变循环 */
 .ach-cell.just-unlocked::after {
   content: '';
   position: absolute;
-  inset: -3px;
+  inset: -4px;
   border-radius: inherit;
-  background: linear-gradient(135deg, var(--cream-yellow), var(--sakura-pink));
   z-index: -1;
-  animation: achGlowPulse 2s var(--ease-smooth) both;
-  opacity: 0.5;
+  animation: achGlowPulse 2.8s var(--ease-smooth) both;
+  opacity: 0.55;
+  background-size: 300% 300%;
+  background-image: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow));
+  animation: achGlowPulse 2.8s var(--ease-smooth) both, achGlowRotate 2.8s linear both;
 }
 @keyframes achGlowPulse {
-  0% { opacity: 0.6; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.15); }
+  0%   { opacity: 0.7; transform: scale(1.06); }
+  50%  { opacity: 0.35; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.18); }
+}
+@keyframes achGlowRotate {
+  0%   { background-image: conic-gradient(from 0deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow)); }
+  100% { background-image: conic-gradient(from 360deg, var(--cream-yellow), var(--sakura-pink), var(--mint-green), var(--sky-blue), var(--cream-yellow)); }
+}
+
+/* 解锁后成就名字发光 */
+.ach-cell.unlocked .ach-cell-name {
+  animation: achNameGlow 1.2s 0.5s var(--ease-smooth) both;
+}
+@keyframes achNameGlow {
+  0%   { text-shadow: 0 0 0px var(--cream-yellow); color: var(--text-main); }
+  40%  { text-shadow: 0 0 8px var(--cream-yellow), 0 0 16px var(--sakura-pink); color: #E8A317; }
+  100% { text-shadow: 0 0 3px rgba(255,228,160,0.4); color: var(--text-main); }
 }
 
 /* 成就详情 tooltip */
@@ -1422,7 +1558,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
 
     <!-- ===== 🍞 底部版本提示 ===== -->
     <div class="footer">
-      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.5<br>
+      <span class="heart">❤</span> SDUFE Library Remote Check-in v2.8<br>
       奶龙奶油卡通风 · 请连接校园网使用
     </div>
 
@@ -1666,11 +1802,26 @@ function doAction(type) {
 
       addHistory(type, ts);
 
-      // 奶龙弹跳 + 撒花
+      // 奶龙三段式表情变化 + 弹跳
       const nailongEl = document.getElementById('statusNailong');
-      nailongEl.classList.remove('nailong-bounce');
-      void nailongEl.offsetWidth; // 触发 reflow 重播动画
-      nailongEl.classList.add('nailong-bounce');
+      // 第一段：害羞捂脸（0-30%）
+      nailongEl.src = 'nailong-shock.png';
+      nailongEl.style.transform = 'scale(0.85) rotate(-8deg)';
+      nailongEl.style.transition = 'transform 0.2s var(--ease-spring)';
+      // 第二段：偷偷看（30-60%）
+      setTimeout(() => {
+        nailongEl.style.transform = 'scale(1.1) rotate(5deg)';
+        speakNailong('被你发现了！奶龙害羞了~');
+      }, 400);
+      // 第三段：开心转圈（60-100%）
+      setTimeout(() => {
+        nailongEl.src = 'nailong-happy.png';
+        nailongEl.classList.remove('nailong-bounce');
+        void nailongEl.offsetWidth;
+        nailongEl.classList.add('nailong-bounce');
+        nailongEl.style.transform = '';
+        nailongEl.style.transition = '';
+      }, 900);
       launchConfetti();
 
       document.getElementById('resultIcon').textContent = '🎉';
@@ -1908,9 +2059,18 @@ function resetIdleTimer() {
     const bubble = document.getElementById('idleBubble');
     bubble.textContent = idleMsgs[Math.floor(Math.random() * idleMsgs.length)];
     bubble.classList.add('show');
-    // 奶龙抖动
+    // 奶龙抖动 + 滤镜逐渐犀利
     const sn = document.getElementById('scrollNailong');
-    if (sn) { sn.style.animation = 'none'; void sn.offsetWidth; sn.style.animation = 'scrollFloat 0.3s ease-in-out 3'; }
+    if (sn) {
+      sn.style.animation = 'none';
+      void sn.offsetWidth;
+      // 三段式：正常 → 略微变色 → 犀利盯人
+      sn.style.filter = 'hue-rotate(0deg) brightness(1) saturate(1)';
+      sn.style.transition = 'filter 0.5s var(--ease-smooth)';
+      setTimeout(() => { sn.style.filter = 'hue-rotate(15deg) brightness(0.95) saturate(1.3)'; }, 300);
+      setTimeout(() => { sn.style.filter = 'hue-rotate(30deg) brightness(0.9) saturate(1.6) contrast(1.2)'; }, 800);
+      sn.style.animation = 'scrollFloat 0.3s ease-in-out 3';
+    }
   }, 30000);
 }
 ['click','touchstart','scroll','keydown'].forEach(e => document.addEventListener(e, resetIdleTimer, {passive:true}));
@@ -1970,6 +2130,142 @@ function createSeasonParticles() {
   }
 }
 createSeasonParticles();
+
+// ===== 💧 水波纹（Ripple）效果 =====
+function createRipple(e, el) {
+  // 移除旧 ripple
+  const old = el.querySelector('.ripple');
+  if (old) old.remove();
+
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const x = (e.clientX || e.touches[0].clientX) - rect.left - size / 2;
+  const y = (e.clientY || e.touches[0].clientY) - rect.top - size / 2;
+
+  ripple.style.width  = ripple.style.height = size + 'px';
+  ripple.style.left = x + 'px';
+  ripple.style.top  = y + 'px';
+  ripple.style.position = 'absolute';
+
+  // 根据元素背景色决定波纹色
+  const isDark = el.classList.contains('btn-cream') ||
+                  el.closest('.btn-cream') ||
+                  window.getComputedStyle(el).backgroundColor !== 'rgba(0, 0, 0, 0)';
+  // 奶油按钮用白色波纹，卡片用主题色波纹
+  if (el.classList.contains('btn-cream') || el.closest('.btn-cream')) {
+    ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 60%, transparent 72%)';
+  } else {
+    ripple.style.background = 'radial-gradient(circle, rgba(255,228,160,0.45) 0%, rgba(255,209,220,0.15) 60%, transparent 72%)';
+  }
+
+  ripple.style.zIndex = '0';
+  ripple.style.pointerEvents = 'none';
+  ripple.style.borderRadius = '50%';
+  ripple.style.transform = 'scale(0)';
+  ripple.style.animation = 'rippleSpread 0.6s cubic-bezier(0.4,0,0.2,1) forwards';
+
+  el.appendChild(ripple);
+  setTimeout(() => { if (ripple.parentNode) ripple.remove(); }, 700);
+}
+
+// 绑定按钮 ripple
+document.querySelectorAll('.btn-cream, .btn-cream-secondary').forEach(el => {
+  ['mousedown','touchstart'].forEach(evt => {
+    el.addEventListener(evt, e => createRipple(e, el), {passive:true});
+  });
+});
+
+// 绑定 action-card ripple
+document.querySelectorAll('.action-card').forEach(el => {
+  ['mousedown','touchstart'].forEach(evt => {
+    el.addEventListener(evt, e => createRipple(e, el), {passive:true});
+  });
+});
+
+// ===== ⚡ 蓄力感（长按蓄力）系统 =====
+let chargeTimer = null;
+let chargeActive = false;
+const CHARGE_TIME = 400; // 蓄力阈值 ms
+
+function startCharge(el, type) {
+  if (chargeActive) return;
+  chargeActive = true;
+
+  // 进入蓄力状态：缩小 + 能量环
+  el.classList.add('charging');
+  const content = el.querySelector('.card-content');
+  if (content) content.classList.add('charging-text');
+
+  chargeTimer = setTimeout(() => {
+    // 蓄力完成：爆发态
+    el.classList.remove('charging');
+    el.classList.add('charged');
+    // 爆发闪光
+    const flash = document.createElement('div');
+    flash.className = 'charge-flash';
+    el.appendChild(flash);
+    setTimeout(() => flash.remove(), 600);
+  }, CHARGE_TIME);
+}
+
+function endCharge(el, type) {
+  clearTimeout(chargeTimer);
+  const wasCharged = el.classList.contains('charged');
+
+  el.classList.remove('charging', 'charged');
+  const content = el.querySelector('.card-content');
+  if (content) content.classList.remove('charging-text');
+
+  chargeActive = false;
+
+  if (wasCharged) {
+    // 蓄力完成 → 执行签到（带爆发动画）
+    el.style.transform = 'scale(1.08)';
+    setTimeout(() => { el.style.transform = ''; doAction(type); }, 120);
+  } else {
+    // 短按 → 普通签到
+    doAction(type);
+  }
+}
+
+// 绑定蓄力事件到 action-card（替换 onclick）
+document.querySelectorAll('.action-card').forEach(card => {
+  const type = card.getAttribute('onclick')?.match(/doAction\('(\d)'\)/)?.[1];
+  if (!type) return;
+  card.removeAttribute('onclick');
+
+  ['mousedown','touchstart'].forEach(evt => {
+    card.addEventListener(evt, e => {
+      e.preventDefault();
+      startCharge(card, type);
+    }, {passive:false});
+  });
+
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
+    card.addEventListener(evt, () => endCharge(card, type));
+  });
+});
+
+// ===== 🌀 视差（Parallax）滚动效果 =====
+let parallaxRAF = null;
+function applyParallax() {
+  const sy = window.scrollY || window.pageYOffset;
+  // 背景最慢
+  document.body.style.backgroundPositionY = (sy * 0.08) + 'px';
+  // 状态卡片中等
+  const statusCard = document.querySelector('.status-card');
+  if (statusCard) statusCard.style.transform = 'translateY(' + (sy * 0.04) + 'px)';
+  // 语录框稍快
+  const quoteBox = document.getElementById('quoteBox');
+  if (quoteBox) quoteBox.style.transform = 'translateY(' + (sy * 0.06) + 'px)';
+  parallaxRAF = null;
+}
+window.addEventListener('scroll', () => {
+  if (!parallaxRAF) parallaxRAF = requestAnimationFrame(applyParallax);
+}, {passive:true});
 
 // ===== 点击弹窗遮罩关闭 =====
 document.getElementById('resultOverlay').addEventListener('click', function(e) {
