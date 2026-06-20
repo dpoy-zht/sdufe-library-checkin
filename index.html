@@ -12,6 +12,7 @@
 <!-- ===== 圆润卡通字体 ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
 /* ============================================================
@@ -860,6 +861,36 @@ body[data-period="night"]     { --text-main: #B0BEC5; --text-sub: #78909C; --bg-
   font-family: 'SF Mono', 'Menlo', monospace;
   border: 2px dashed var(--cream-yellow);
 }
+/* 二维码容器 */
+.qrcode-wrapper {
+  text-align: center;
+  margin: 16px 0;
+  padding: 20px;
+  background: #FFFDF7;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(139,119,99,0.12);
+}
+.qrcode-wrapper #qrcodeBox {
+  display: inline-block;
+  padding: 12px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.qrcode-wrapper #qrcodeBox img {
+  display: block;
+}
+.qrcode-hint {
+  margin: 12px 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #5A4A3A;
+}
+.qrcode-sub {
+  margin: 0;
+  font-size: 12px;
+  color: #9A8B7A;
+}
 .btn-cream {
   width: 100%; height: 54px;
   background: linear-gradient(135deg, var(--cream-yellow), var(--peach));
@@ -1443,9 +1474,12 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     <div class="result-title" id="resultTitle">操作成功</div>
     <div class="result-msg" id="resultMsg">请点击下方按钮跳转到图书馆</div>
     <div class="result-url" id="resultUrl" style="display:none;"></div>
-    <a class="btn-cream" id="resultLinkBtn" href="#" target="_self" style="display:none;text-decoration:none;">📱 跳转到图书馆</a>
-    <button class="btn-cream" id="resultBtn" onclick="goToLibrary()">📱 跳转到图书馆</button>
-    <button class="btn-cream-secondary" onclick="copyLink()" id="copyBtn">📋 复制链接</button>
+    <div class="qrcode-wrapper" id="qrcodeWrapper" style="display:none;">
+      <div id="qrcodeBox"></div>
+      <p class="qrcode-hint">👆 长按识别二维码完成签到</p>
+      <p class="qrcode-sub">（等同于在图书馆门口扫码）</p>
+    </div>
+    <button class="btn-cream-secondary" onclick="copyLink()" id="copyBtn">📋 复制链接备用</button>
   </div>
 </div>
 
@@ -1648,13 +1682,8 @@ function doAction(type) {
         return;
       }
       const ts = d.data;
-      // 签到跳转分两步：
-      // 1) 先 OAuth 到 scancheck（不带 t 参数，让服务器自己生成时间戳）
-      // 2) 如果服务器需要 t 参数，OAuth 回调后服务器会处理
-      const redirectUri = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type;
-      const checkinUrl = redirectUri + '&t=' + ts;
-      const oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx83312efca74d506a&redirect_uri=' + encodeURIComponent(redirectUri) + '&response_type=code&scope=snsapi_base&state=' + ts + '#wechat_redirect';
-      currentUrl = oauthUrl;
+      const checkinUrl = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
+      currentUrl = checkinUrl;
 
       // 保存签到状态
       if (type === '1') {
@@ -1686,11 +1715,12 @@ function doAction(type) {
       document.getElementById('resultUrl').style.display = 'block';
       document.getElementById('resultUrl').textContent = checkinUrl;
 
-      // 用真实 <a> 标签代替 window.location.href（微信里保留 OAuth Cookie）
-      var linkBtn = document.getElementById('resultLinkBtn');
-      linkBtn.href = oauthUrl;
-      linkBtn.style.display = 'block';
-      document.getElementById('resultBtn').style.display = 'none';
+      // 生成二维码（微信长按识别 = 扫码，走 OAuth 流程不再报非法请求）
+      var qrWrap = document.getElementById('qrcodeWrapper');
+      var qrBox = document.getElementById('qrcodeBox');
+      qrBox.innerHTML = '';
+      new QRCode(qrBox, { text: checkinUrl, width: 220, height: 220, colorDark: '#5A4A3A', colorLight: '#FFFDF7' });
+      qrWrap.style.display = 'block';
 
       document.getElementById('resultOverlay').classList.add('show');
     })
