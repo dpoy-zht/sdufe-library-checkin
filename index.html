@@ -1443,6 +1443,7 @@ body[data-period="night"] .season-particle { opacity: 0.3; }
     <div class="result-title" id="resultTitle">操作成功</div>
     <div class="result-msg" id="resultMsg">请点击下方按钮跳转到图书馆</div>
     <div class="result-url" id="resultUrl" style="display:none;"></div>
+    <a class="btn-cream" id="resultLinkBtn" href="#" target="_self" style="display:none;text-decoration:none;">📱 跳转到图书馆</a>
     <button class="btn-cream" id="resultBtn" onclick="goToLibrary()">📱 跳转到图书馆</button>
     <button class="btn-cream-secondary" onclick="copyLink()" id="copyBtn">📋 复制链接</button>
   </div>
@@ -1679,6 +1680,13 @@ function doAction(type) {
         '时间戳: ' + ts + '\n链接已就绪，快去微信完成' + names[type] + '\n（奶龙提醒：别看了，快去签）';
       document.getElementById('resultUrl').style.display = 'block';
       document.getElementById('resultUrl').textContent = url;
+
+      // 用真实 <a> 标签代替 window.location.href（微信里保留 OAuth Cookie）
+      var linkBtn = document.getElementById('resultLinkBtn');
+      linkBtn.href = url;
+      linkBtn.style.display = 'block';
+      document.getElementById('resultBtn').style.display = 'none';
+
       document.getElementById('resultOverlay').classList.add('show');
     })
     .catch(() => {
