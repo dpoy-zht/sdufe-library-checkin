@@ -1648,9 +1648,12 @@ function doAction(type) {
         return;
       }
       const ts = d.data;
-      const checkinUrl = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
-      // 通过微信 OAuth 授权跳转（否则 skalibrary.net 会报"非法请求"）
-      const oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx83312efca74d506a&redirect_uri=' + encodeURIComponent(checkinUrl) + '&response_type=code&scope=snsapi_base#wechat_redirect';
+      // 签到跳转分两步：
+      // 1) 先 OAuth 到 scancheck（不带 t 参数，让服务器自己生成时间戳）
+      // 2) 如果服务器需要 t 参数，OAuth 回调后服务器会处理
+      const redirectUri = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type;
+      const checkinUrl = redirectUri + '&t=' + ts;
+      const oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx83312efca74d506a&redirect_uri=' + encodeURIComponent(redirectUri) + '&response_type=code&scope=snsapi_base&state=' + ts + '#wechat_redirect';
       currentUrl = oauthUrl;
 
       // 保存签到状态
