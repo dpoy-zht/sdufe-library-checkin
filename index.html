@@ -1648,8 +1648,10 @@ function doAction(type) {
         return;
       }
       const ts = d.data;
-      const url = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
-      currentUrl = url;
+      const checkinUrl = 'http://www.skalibrary.net/wx/scancheck?school=sdufe&type=' + type + '&t=' + ts;
+      // 通过微信 OAuth 授权跳转（否则 skalibrary.net 会报"非法请求"）
+      const oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx83312efca74d506a&redirect_uri=' + encodeURIComponent(checkinUrl) + '&response_type=code&scope=snsapi_base#wechat_redirect';
+      currentUrl = oauthUrl;
 
       // 保存签到状态
       if (type === '1') {
@@ -1679,11 +1681,11 @@ function doAction(type) {
       document.getElementById('resultMsg').textContent =
         '时间戳: ' + ts + '\n链接已就绪，快去微信完成' + names[type] + '\n（奶龙提醒：别看了，快去签）';
       document.getElementById('resultUrl').style.display = 'block';
-      document.getElementById('resultUrl').textContent = url;
+      document.getElementById('resultUrl').textContent = checkinUrl;
 
       // 用真实 <a> 标签代替 window.location.href（微信里保留 OAuth Cookie）
       var linkBtn = document.getElementById('resultLinkBtn');
-      linkBtn.href = url;
+      linkBtn.href = oauthUrl;
       linkBtn.style.display = 'block';
       document.getElementById('resultBtn').style.display = 'none';
 
